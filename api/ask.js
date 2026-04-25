@@ -12,6 +12,7 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: 'Question is required and must be a string' });
   }
   const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+  console.log('API KEY exists:', !!OPENROUTER_API_KEY);
   if (!OPENROUTER_API_KEY) {
     return res.status(500).json({ error: 'Server configuration error' });
   }
