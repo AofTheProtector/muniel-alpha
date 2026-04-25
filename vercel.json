@@ -1,8 +1,1 @@
-{
-  "functions": {
-    "api/ask.js": {
-      "runtime": "nodejs18.x",
-      "memory": 512
-    }
-  }
-}
+{}
