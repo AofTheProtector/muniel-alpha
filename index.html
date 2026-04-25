@@ -34,7 +34,7 @@ document.getElementById('aiButton').addEventListener('click', async () => {
     btn.disabled = true;
     btn.textContent = 'กำลังคิด...';
     try {
-        const resp = wait fetch('https://muniel-alpha.vercel.app/api/ask', {
+        const resp = await fetch('https://muniel-alpha.vercel.app/api/ask', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({question})
