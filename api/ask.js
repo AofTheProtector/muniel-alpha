@@ -16,8 +16,8 @@ module.exports = async (req, res) => {
   if (!HF_API_KEY) {
     return res.status(500).json({ error: 'Server configuration error' });
   }
-  const modelID = "google/flan-t5-base";
-  const apiUrl = `https://api-inference.huggingface.co/models/${modelID}`;
+  const modelID = "mistralai/Mistral-7B-Instruct-v0.1";
+  const apiUrl = `https://router.huggingface.co/hf-inference/models/${modelID}/v1/chat/completions`;
   const prompt = `คำถาม:${question}\nคำตอบ:`;
   try {
     const response = await axios.post(
