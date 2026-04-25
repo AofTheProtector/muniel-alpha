@@ -19,7 +19,6 @@
 <div class="container">
     <h1>ค้นพบโปรไฟล์ดวงชะตาของคุณ</h1>
     <p>กรอกวัน เวลา และสถานที่เกิดของคุณเพื่อรับการวิเคราะห์เฉพาะตัว</p>
-    <!-- เปลี่ยน URL ด้านล่างให้เป็นลิงก์ฟอร์ม Tally ของคุณจริงๆ -->
     <iframe src="https://tally.so/r/gDQG2J"
             allow="clipboard-write; encrypted-media"
             sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
@@ -35,11 +34,12 @@ document.getElementById('aiButton').addEventListener('click', async () => {
     btn.disabled = true;
     btn.textContent = 'กำลังคิด...';
     try {
-        const resp = await fetch('/api/ask', {
+        const resp = await fetch('https://muniel-alpha-git-main-wassapolaof-2067s-projects.vercel.app/api/ask', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({question})
-        });const data = await resp.json();
+        });
+        const data = await resp.json();
         if (data.error) {
             alert('เกิดข้อผิดพลาด: ' + data.error);
         } else {
