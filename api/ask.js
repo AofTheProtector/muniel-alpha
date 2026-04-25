@@ -16,7 +16,7 @@ module.exports = async (req, res) => {
   if (!HF_API_KEY) {
     return res.status(500).json({ error: 'Server configuration error' });
   }
-  const modelID = "bigscience/bloomz-560m";
+  const modelID = "google/flan-t5-base";
   const apiUrl = `https://api-inference.huggingface.co/models/${modelID}`;
   const prompt = `คำถาม:${question}\nคำตอบ:`;
   try {
