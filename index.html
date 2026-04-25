@@ -9,6 +9,10 @@
         .container {max-width:600px; margin:auto; background:#fff; padding:20px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);}
         h1 {text-align:center; color:#2c3e50;}
         iframe {width:100%; border:none; min-height:800px;}
+        #aiButton {margin-top:15px;padding:10px 20px;background:#4caf50;color:white;border:none;border-radius:4px;cursor:pointer;}
+        #aiButton:hover {background:#45a049;}
+        #aiResult {margin-top:15px;padding:10px;background:#e8f5e9;border-left:4px solid #4caf50;display:none;}
+        #aiResult p {margin:0;}
     </style>
 </head>
 <body>
@@ -19,6 +23,37 @@
     <iframe src="https://tally.so/r/gDQG2J"
             allow="clipboard-write; encrypted-media"
             sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
+    <br>
+    <button id="aiButton">ลองถาม AI ครั้งแรก</button>
+    <div id="aiResult"><p id="aiAnswer"></p></div>
 </div>
+<script>
+document.getElementById('aiButton').addEventListener('click', async () => {
+    const question = prompt("ถามคำถามเกี่ยวกับดวงชะตาหรือคำแนะนำส่วนตัวของคุณ (ตัวอย่าง: วันนี้ฉันควรโฟกัสเรื่องอะไร?)");
+    if (!question) return;
+    const btn = document.getElementById('aiButton');
+    btn.disabled = true;
+    btn.textContent = 'กำลังคิด...';
+    try {
+        const resp = await fetch('/api/ask', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({question})
+        });const data = await resp.json();
+        if (data.error) {
+            alert('เกิดข้อผิดพลาด: ' + data.error);
+        } else {
+            document.getElementById('aiAnswer').textContent = data.answer;
+            document.getElementById('aiResult').style.display = 'block';
+        }
+    } catch (e) {
+        alert('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้');
+        console.error(e);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'ลองถาม AI ครั้งแรก';
+    }
+});
+</script>
 </body>
 </html>
