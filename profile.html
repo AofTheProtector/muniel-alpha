@@ -1,304 +1,526 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <title>Your Astrological Status</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #000;
-            --text-color: #fff;
-            --border-color: #fff;
-            --accent-color: #aaaaaa;
-        }
-        body {
-            font-family: 'Courier New', Courier, monospace;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-        /* Retro RPG Box */
-        .rpg-box {
-            border: 4px solid var(--border-color);
-            background: #000;
-            padding: 20px;
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 600px;
-            box-shadow: 4px 4px 0px var(--accent-color);
-            position: relative;
-        }
-        
-        .rpg-title {
-            text-align: center;
-            font-size: 1.5em;
-            text-transform: uppercase;
-            border-bottom: 2px dashed var(--border-color);
-            padding-bottom: 10px;
-            margin-top: 0;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
-        }
+<meta charset="UTF-8">
+<title>Muniel — Character Status</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="โปรไฟล์ดวงชะตา RPG ของคุณ — วิเคราะห์จาก Western Astrology">
+<meta property="og:title" content="ดูโปรไฟล์ดวงชะตา RPG ของฉันบน Muniel">
+<meta property="og:description" content="ค้นพบ Class, Element, Strengths และ Weaknesses จากหลัก Natal Chart">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0a;--white:#f0f0f0;--gray:#888;--gold:#ffd700;--dark:#111}
+body{background:var(--bg);color:var(--white);font-family:'Press Start 2P',monospace;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
+#starfield{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
 
-        .loading {
-            text-align: center;
-            font-size: 1.2em;
-            animation: blink 1s step-end infinite;
-        }
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
+.wrapper{position:relative;z-index:1;width:100%;max-width:600px;padding:20px 16px 60px;display:flex;flex-direction:column;align-items:center;gap:20px}
 
-        .content {
-            white-space: pre-wrap; /* to preserve newlines from AI */
-            line-height: 1.6;
-            font-size: 1.1em;
-        }
+/* ── HEADER ── */
+.page-header{text-align:center;padding-top:24px}
+.page-header h1{font-size:1em;letter-spacing:3px;text-shadow:3px 3px 0 #333}
+.page-header .sub{font-size:0.4em;color:var(--gray);margin-top:10px;letter-spacing:1px}
 
-        .btn {
-            background: transparent;
-            color: var(--text-color);
-            border: 2px solid var(--border-color);
-            padding: 10px 20px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 1em;
-            cursor: pointer;
-            text-transform: uppercase;
-            box-shadow: 2px 2px 0px var(--accent-color);
-            transition: all 0.1s;
-            margin: 5px;
-            width: 100%;
-        }
-        .btn:hover {
-            background: var(--text-color);
-            color: var(--bg-color);
-        }
-        .btn:active {
-            box-shadow: 0px 0px 0px var(--accent-color);
-            transform: translate(2px, 2px);
-        }
+.pixel-divider{width:100%;height:4px;background:repeating-linear-gradient(to right,var(--white) 0,var(--white) 8px,transparent 8px,transparent 16px);opacity:.2}
 
-        .hidden {
-            display: none !important;
-        }
+/* ── SCREENS ── */
+.screen{width:100%;display:none}
+.screen.active{display:flex;flex-direction:column;align-items:center;gap:16px}
 
-        .actions {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 100%;
-            max-width: 600px;
-            box-sizing: border-box;
-        }
+/* ── LOADING ── */
+#screen-loading .loading-title{font-size:0.65em;letter-spacing:2px;animation:blink 1s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+.progress-wrap{width:100%;border:2px solid #444;height:20px;background:#000;overflow:hidden}
+.progress-bar{height:100%;width:0;background:var(--white);transition:width 0.4s;image-rendering:pixelated}
+.loading-log{font-size:0.38em;color:var(--gray);text-align:left;width:100%;line-height:2.5;min-height:60px}
 
-        .chat-result {
-            margin-top: 15px;
-            border-left: 4px solid var(--border-color);
-            padding-left: 15px;
-            font-style: italic;
-            color: #ddd;
-            background: #111;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-        
-        #waitlistBtn {
-            border-color: #ffcc00;
-            color: #ffcc00;
-        }
-        #waitlistBtn:hover {
-            background: #ffcc00;
-            color: #000;
-        }
+/* ── RPG BOX ── */
+.rpg-box{width:100%;border:3px solid var(--white);background:#000;padding:20px 18px;box-shadow:6px 6px 0 #333}
+.rpg-box-title{font-size:0.5em;color:var(--gray);letter-spacing:2px;text-align:center;border-bottom:1px dashed #333;padding-bottom:10px;margin-bottom:16px}
 
-        /* Form Styles */
-        .form-group {
-            margin-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-            text-align: left;
-        }
-        .form-group label {
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .rpg-input {
-            background: #000;
-            color: #fff;
-            border: 2px solid var(--border-color);
-            padding: 10px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 1em;
-            outline: none;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        .rpg-input:focus {
-            border-color: #ffcc00;
-        }
-        select.rpg-input {
-            appearance: none;
-            -webkit-appearance: none;
-            cursor: pointer;
-        }
-    </style>
+/* ── CHARACTER PANEL ── */
+.char-panel{display:flex;gap:16px;align-items:flex-start;width:100%}
+.char-sprite-wrap{flex-shrink:0;width:96px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.char-sprite{width:96px;height:96px;image-rendering:pixelated;border:2px solid #333}
+.char-class-label{font-size:0.3em;color:var(--gold);text-align:center;letter-spacing:1px}
+.char-stats{flex:1;display:flex;flex-direction:column;gap:10px}
+
+/* ── STAT ROW ── */
+.stat-row{display:flex;flex-direction:column;gap:4px}
+.stat-label{font-size:0.35em;color:var(--gray);letter-spacing:1px}
+.stat-val{font-size:0.45em;color:var(--white)}
+.stat-bar-wrap{height:8px;background:#222;width:100%;border:1px solid #444;overflow:hidden}
+.stat-bar{height:100%;width:0;background:var(--white);transition:width 1.2s cubic-bezier(.25,.8,.25,1)}
+.stat-bar.gold{background:var(--gold)}
+
+/* ── TEXT SECTIONS ── */
+.text-section{width:100%}
+.text-section .section-label{font-size:0.38em;color:var(--gold);letter-spacing:2px;margin-bottom:10px;display:block}
+.bullet-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.bullet-list li{font-size:0.38em;color:var(--white);line-height:1.8;padding-left:12px;position:relative}
+.bullet-list li::before{content:"▸";position:absolute;left:0;color:var(--gray)}
+
+.special-box{background:#111;border-left:3px solid var(--gold);padding:10px 14px;font-size:0.38em;color:var(--gold);line-height:2;letter-spacing:1px}
+
+/* ── ACTIONS ── */
+.action-section{width:100%;display:flex;flex-direction:column;gap:10px}
+
+/* ── BUTTONS ── */
+.btn{width:100%;padding:14px;font-family:'Press Start 2P',monospace;font-size:0.55em;cursor:pointer;letter-spacing:1px;transition:all 0.1s;border:2px solid var(--white);background:transparent;color:var(--white)}
+.btn:hover{background:var(--white);color:#000}
+.btn:active{transform:translate(3px,3px);box-shadow:none}
+.btn-gold{border-color:var(--gold);color:var(--gold)}
+.btn-gold:hover{background:var(--gold);color:#000}
+.btn-share{box-shadow:4px 4px 0 #555}
+
+/* ── DIALOG BOX (Ask AI) ── */
+.dialog-box{width:100%;border:3px solid var(--white);background:#000;padding:16px;display:none}
+.dialog-speaker{font-size:0.38em;color:var(--gold);margin-bottom:10px;letter-spacing:1px}
+.dialog-text{font-size:0.38em;color:var(--white);line-height:2.2;min-height:40px;white-space:pre-wrap}
+.dialog-cursor{display:inline-block;width:8px;height:12px;background:var(--white);animation:blink 0.7s step-end infinite;vertical-align:bottom;margin-left:2px}
+
+/* ── ERROR ── */
+.error-screen{text-align:center;padding:40px 20px}
+.error-screen p{font-size:0.5em;color:#ff4444;line-height:2.5}
+
+.hidden{display:none!important}
+</style>
 </head>
 <body>
+<canvas id="starfield"></canvas>
 
-<div class="rpg-box" id="profileBox">
-    <h1 class="rpg-title">CHARACTER STATUS</h1>
-    
-    <div id="inputForm">
-        <div class="form-group">
-            <label for="dob">วันเกิด (Date of Birth)</label>
-            <input type="date" id="dob" class="rpg-input">
+<div class="wrapper">
+
+  <div class="page-header">
+    <h1>✦ MUNIEL ✦</h1>
+    <div class="sub">NATAL CHART · CHARACTER STATUS</div>
+  </div>
+
+  <div class="pixel-divider"></div>
+
+  <!-- LOADING SCREEN -->
+  <div id="screen-loading" class="screen active">
+    <div class="rpg-box">
+      <div class="rpg-box-title">▸ SYSTEM INITIALIZING ◂</div>
+      <div class="loading-title">ANALYZING STARS...</div>
+      <div style="height:12px"></div>
+      <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+      <div style="height:10px"></div>
+      <div class="loading-log" id="loadingLog"></div>
+    </div>
+  </div>
+
+  <!-- PROFILE SCREEN -->
+  <div id="screen-profile" class="screen">
+
+    <!-- Character Panel -->
+    <div class="rpg-box">
+      <div class="rpg-box-title" id="profileTitle">▸ CHARACTER STATUS ◂</div>
+      <div class="char-panel">
+        <div class="char-sprite-wrap">
+          <canvas id="spriteCanvas" class="char-sprite" width="96" height="96"></canvas>
+          <div class="char-class-label" id="classLabel">LOADING</div>
         </div>
-        <div class="form-group">
-            <label for="tob">เวลาเกิดโดยประมาณ (Estimated Time)</label>
-            <select id="tob" class="rpg-input">
-                <option value="">-- เลือกเวลา --</option>
-                <option value="00:00 - 02:00">00:00 - 02:00</option>
-                <option value="02:00 - 04:00">02:00 - 04:00</option>
-                <option value="04:00 - 06:00">04:00 - 06:00</option>
-                <option value="06:00 - 08:00">06:00 - 08:00</option>
-                <option value="08:00 - 10:00">08:00 - 10:00</option>
-                <option value="10:00 - 12:00">10:00 - 12:00</option>
-                <option value="12:00 - 14:00">12:00 - 14:00</option>
-                <option value="14:00 - 16:00">14:00 - 16:00</option>
-                <option value="16:00 - 18:00">16:00 - 18:00</option>
-                <option value="18:00 - 20:00">18:00 - 20:00</option>
-                <option value="20:00 - 22:00">20:00 - 22:00</option>
-                <option value="22:00 - 24:00">22:00 - 24:00</option>
-                <option value="ไม่ทราบเวลาเกิด">ไม่ทราบเวลาเกิด</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="province">จังหวัดเกิด (Province)</label>
-            <select id="province" class="rpg-input">
-                <option value="">-- เลือกจังหวัด --</option>
-                <option value="กรุงเทพมหานคร">กรุงเทพมหานคร</option><option value="กระบี่">กระบี่</option><option value="กาญจนบุรี">กาญจนบุรี</option><option value="กาฬสินธุ์">กาฬสินธุ์</option><option value="กำแพงเพชร">กำแพงเพชร</option><option value="ขอนแก่น">ขอนแก่น</option><option value="จันทบุรี">จันทบุรี</option><option value="ฉะเชิงเทรา">ฉะเชิงเทรา</option><option value="ชลบุรี">ชลบุรี</option><option value="ชัยนาท">ชัยนาท</option><option value="ชัยภูมิ">ชัยภูมิ</option><option value="ชุมพร">ชุมพร</option><option value="เชียงราย">เชียงราย</option><option value="เชียงใหม่">เชียงใหม่</option><option value="ตรัง">ตรัง</option><option value="ตราด">ตราด</option><option value="ตาก">ตาก</option><option value="นครนายก">นครนายก</option><option value="นครปฐม">นครปฐม</option><option value="นครพนม">นครพนม</option><option value="นครราชสีมา">นครราชสีมา</option><option value="นครศรีธรรมราช">นครศรีธรรมราช</option><option value="นครสวรรค์">นครสวรรค์</option><option value="นนทบุรี">นนทบุรี</option><option value="นราธิวาส">นราธิวาส</option><option value="น่าน">น่าน</option><option value="บึงกาฬ">บึงกาฬ</option><option value="บุรีรัมย์">บุรีรัมย์</option><option value="ปทุมธานี">ปทุมธานี</option><option value="ประจวบคีรีขันธ์">ประจวบคีรีขันธ์</option><option value="ปราจีนบุรี">ปราจีนบุรี</option><option value="ปัตตานี">ปัตตานี</option><option value="พระนครศรีอยุธยา">พระนครศรีอยุธยา</option><option value="พังงา">พังงา</option><option value="พัทลุง">พัทลุง</option><option value="พิจิตร">พิจิตร</option><option value="พิษณุโลก">พิษณุโลก</option><option value="เพชรบุรี">เพชรบุรี</option><option value="เพชรบูรณ์">เพชรบูรณ์</option><option value="แพร่">แพร่</option><option value="พะเยา">พะเยา</option><option value="ภูเก็ต">ภูเก็ต</option><option value="มหาสารคาม">มหาสารคาม</option><option value="มุกดาหาร">มุกดาหาร</option><option value="แม่ฮ่องสอน">แม่ฮ่องสอน</option><option value="ยะลา">ยะลา</option><option value="ยโสธร">ยโสธร</option><option value="ร้อยเอ็ด">ร้อยเอ็ด</option><option value="ระนอง">ระนอง</option><option value="ระยอง">ระยอง</option><option value="ราชบุรี">ราชบุรี</option><option value="ลพบุรี">ลพบุรี</option><option value="ลำปาง">ลำปาง</option><option value="ลำพูน">ลำพูน</option><option value="เลย">เลย</option><option value="ศรีสะเกษ">ศรีสะเกษ</option><option value="สกลนคร">สกลนคร</option><option value="สงขลา">สงขลา</option><option value="สตูล">สตูล</option><option value="สมุทรปราการ">สมุทรปราการ</option><option value="สมุทรสงคราม">สมุทรสงคราม</option><option value="สมุทรสาคร">สมุทรสาคร</option><option value="สระแก้ว">สระแก้ว</option><option value="สระบุรี">สระบุรี</option><option value="สิงห์บุรี">สิงห์บุรี</option><option value="สุโขทัย">สุโขทัย</option><option value="สุพรรณบุรี">สุพรรณบุรี</option><option value="สุราษฎร์ธานี">สุราษฎร์ธานี</option><option value="สุรินทร์">สุรินทร์</option><option value="หนองคาย">หนองคาย</option><option value="หนองบัวลำภู">หนองบัวลำภู</option><option value="อ่างทอง">อ่างทอง</option><option value="อำนาจเจริญ">อำนาจเจริญ</option><option value="อุดรธานี">อุดรธานี</option><option value="อุตรดิตถ์">อุตรดิตถ์</option><option value="อุทัยธานี">อุทัยธานี</option><option value="อุบลราชธานี">อุบลราชธานี</option>
-            </select>
-        </div>
-        <button id="analyzeBtn" class="btn">วิเคราะห์ดวงชะตา</button>
+        <div class="char-stats" id="statBars"></div>
+      </div>
+      
+      <!-- THE BIG THREE -->
+      <div style="margin-top:16px; padding-top:12px; border-top:1px dashed #333; display:flex; justify-content:space-between; font-size:0.35em;">
+        <div><span style="color:var(--gold)">SUN:</span> <span id="sunSignText" style="color:var(--white)">-</span></div>
+        <div><span style="color:#aaa">MOON:</span> <span id="moonSignText" style="color:var(--white)">-</span></div>
+        <div><span style="color:#88aaff">RISING:</span> <span id="risingSignText" style="color:var(--white)">-</span></div>
+      </div>
     </div>
 
-    <div id="loadingScreen" class="loading hidden">ANALYZING STARS...</div>
-    <div id="profileContent" class="content hidden"></div>
-</div>
+    <!-- Personality -->
+    <div class="rpg-box" id="boxPersonality">
+      <div class="rpg-box-title">▸ PERSONALITY ◂</div>
+      <div class="text-section">
+        <p class="bullet-list" id="personalityText" style="font-size:0.4em;line-height:2.2;color:var(--white)"></p>
+      </div>
+    </div>
 
-<div class="actions hidden" id="actionContainer">
-    <button id="askAiBtn" class="btn">ลองถาม AI ครั้งแรก</button>
-    <div id="askAiResult" class="chat-result hidden"></div>
-    <button id="waitlistBtn" class="btn hidden" onclick="window.location.href='#'">เข้าร่วม Waitlist</button>
-</div>
+    <!-- Strengths -->
+    <div class="rpg-box">
+      <div class="rpg-box-title">▸ STRENGTHS ◂</div>
+      <ul class="bullet-list" id="strengthsList"></ul>
+    </div>
+
+    <!-- Weaknesses -->
+    <div class="rpg-box">
+      <div class="rpg-box-title">▸ WEAKNESSES ◂</div>
+      <ul class="bullet-list" id="weaknessesList"></ul>
+    </div>
+
+    <!-- Special Ability -->
+    <div class="rpg-box">
+      <div class="rpg-box-title">▸ SPECIAL ABILITY ◂</div>
+      <div class="special-box" id="specialAbility"></div>
+    </div>
+
+    <!-- Actions -->
+    <div class="action-section">
+      <button class="btn btn-gold btn-share" id="shareBtn">⬆ แชร์โปรไฟล์นี้</button>
+      <button class="btn" id="askAiBtn">✦ ลองถาม AI ครั้งแรก</button>
+      <div class="dialog-box" id="dialogBox">
+        <div class="dialog-speaker">▸ THE ORACLE SPEAKS ◂</div>
+        <div class="dialog-text" id="dialogText"></div>
+      </div>
+      <button class="btn btn-gold hidden" id="waitlistBtn" onclick="window.open('https://tally.so/r/gDQG2J','_blank')">★ เข้าร่วม Waitlist</button>
+    </div>
+
+  </div>
+
+  <!-- ERROR SCREEN -->
+  <div id="screen-error" class="screen">
+    <div class="rpg-box error-screen">
+      <p>CONNECTION FAILED.<br>THE STARS ARE UNREACHABLE.<br><br>
+      <span style="color:var(--gray);font-size:0.8em">กรุณาลองใหม่อีกครั้ง</span></p>
+      <div style="height:20px"></div>
+      <button class="btn" onclick="window.location.href='index.html'">↩ RETRY</button>
+    </div>
+  </div>
+
+</div><!-- /wrapper -->
 
 <script>
-    const API_URL = 'https://muniel-alpha.vercel.app/api/ask';
+// ── STARFIELD ─────────────────────────────────────────────────
+const canvas = document.getElementById('starfield');
+const ctx = canvas.getContext('2d');
+let stars = [];
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+function initStars(){stars=[];for(let i=0;i<140;i++)stars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()<.15?2:1,alpha:Math.random(),ts:Math.random()*.02+.005,td:Math.random()>.5?1:-1,spd:Math.random()*.25+.05})}
+function drawStars(){ctx.clearRect(0,0,canvas.width,canvas.height);stars.forEach(s=>{s.alpha+=s.ts*s.td;if(s.alpha>=1||s.alpha<=.1)s.td*=-1;s.y-=s.spd;if(s.y<0){s.y=canvas.height;s.x=Math.random()*canvas.width}ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(240,240,240,${s.alpha})`;ctx.fill()});requestAnimationFrame(drawStars)}
+resizeCanvas();initStars();drawStars();window.addEventListener('resize',()=>{resizeCanvas();initStars()});
 
-    document.getElementById('analyzeBtn').addEventListener('click', () => {
-        generateProfile();
+// ── ZODIAC DATA ────────────────────────────────────────────────
+const ZODIAC = [
+  {name:'CAPRICORN',  en:'Capricorn',  dates:[[12,22],[1,19]],  element:'EARTH', color:'#aaaaaa'},
+  {name:'AQUARIUS',   en:'Aquarius',   dates:[[1,20],[2,18]],   element:'AIR',   color:'#88aaff'},
+  {name:'PISCES',     en:'Pisces',     dates:[[2,19],[3,20]],   element:'WATER', color:'#88ddff'},
+  {name:'ARIES',      en:'Aries',      dates:[[3,21],[4,19]],   element:'FIRE',  color:'#ff8888'},
+  {name:'TAURUS',     en:'Taurus',     dates:[[4,20],[5,20]],   element:'EARTH', color:'#aaffaa'},
+  {name:'GEMINI',     en:'Gemini',     dates:[[5,21],[6,20]],   element:'AIR',   color:'#ffff88'},
+  {name:'CANCER',     en:'Cancer',     dates:[[6,21],[7,22]],   element:'WATER', color:'#aaddff'},
+  {name:'LEO',        en:'Leo',        dates:[[7,23],[8,22]],   element:'FIRE',  color:'#ffcc44'},
+  {name:'VIRGO',      en:'Virgo',      dates:[[8,23],[9,22]],   element:'EARTH', color:'#ccffcc'},
+  {name:'LIBRA',      en:'Libra',      dates:[[9,23],[10,22]],  element:'AIR',   color:'#ffccff'},
+  {name:'SCORPIO',    en:'Scorpio',    dates:[[10,23],[11,21]], element:'WATER', color:'#cc44ff'},
+  {name:'SAGITTARIUS',en:'Sagittarius',dates:[[11,22],[12,21]], element:'FIRE',  color:'#ff8844'},
+];
+
+function getZodiac(dob){
+  const d=new Date(dob), m=d.getMonth()+1, day=d.getDate();
+  for(const z of ZODIAC){
+    const [s,e]=z.dates;
+    if((m===s[0]&&day>=s[1])||(m===e[0]&&day<=e[1]))return z;
+  }
+  return ZODIAC[0];
+}
+
+// ── PIXEL SPRITE RENDERER ─────────────────────────────────────
+const SPRITES = {
+  FIRE:   ['0011100','0111110','1111111','1111111','0111110','0011100','0011100'],
+  EARTH:  ['0111110','1111111','1010101','1111111','1010101','1111111','0111110'],
+  WATER:  ['0010000','0111000','0111110','1111111','0111110','0011100','0001000'],
+  AIR:    ['0001000','0011100','0111110','1111111','0011100','0010100','0010100'],
+};
+
+function drawSprite(zodiac){
+  const sc = document.getElementById('spriteCanvas');
+  const c = sc.getContext('2d');
+  const size = 96;
+  const pattern = SPRITES[zodiac.element] || SPRITES.FIRE;
+  const cols = pattern[0].length;
+  const rows = pattern.length;
+  const px = Math.floor(size / cols);
+  c.fillStyle = '#111';
+  c.fillRect(0,0,size,size);
+  // Body: 16x16 pixel figure, scaled
+  const scale = Math.floor(size/16);
+  // Simple humanoid
+  const fig = [
+    '0000110000110000',
+    '0001111001111000',
+    '0001111001111000',
+    '0000110000110000',
+    '0000011111100000',
+    '0001111111110000',
+    '0001111111110000',
+    '0001111111110000',
+    '0001111111110000',
+    '0001111111110000',
+    '0000011111100000',
+    '0000011111100000',
+    '0000110001100000',
+    '0000110001100000',
+    '0001110001110000',
+    '0001110001110000',
+  ];
+  c.fillStyle = zodiac.color;
+  for(let r=0;r<fig.length;r++){
+    for(let col=0;col<fig[r].length;col++){
+      if(fig[r][col]==='1'){
+        c.fillRect(col*scale, r*scale, scale, scale);
+      }
+    }
+  }
+  // Element symbol overlay
+  c.fillStyle = 'rgba(0,0,0,0.5)';
+  c.fillRect(0,size-20,size,20);
+  c.fillStyle = zodiac.color;
+  c.font = 'bold 12px monospace';
+  c.textAlign = 'center';
+  const sym = {FIRE:'🔥',EARTH:'🌿',WATER:'💧',AIR:'💨'}[zodiac.element]||'✦';
+  c.fillText(sym, size/2, size-5);
+}
+
+// ── LOADING SIMULATION ─────────────────────────────────────────
+const logLines = [
+  '> LOADING NATAL CHART ENGINE...',
+  '> CALCULATING PLANETARY POSITIONS...',
+  '> MAPPING HOUSE SYSTEMS...',
+  '> ANALYZING ASPECT PATTERNS...',
+  '> GENERATING CHARACTER CLASS...',
+  '> COMPUTING STAT DISTRIBUTION...',
+  '> FINALIZING PROFILE...',
+];
+let logIdx = 0;
+function tickLog(el, bar){
+  if(logIdx >= logLines.length) return;
+  el.textContent += logLines[logIdx]+'\n';
+  bar.style.width = ((logIdx+1)/logLines.length*100)+'%';
+  logIdx++;
+}
+
+// ── SCREENS ───────────────────────────────────────────────────
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById(id);
+  if(el)el.classList.add('active');
+}
+
+// ── STAT BARS ─────────────────────────────────────────────────
+function renderStatBars(stats, zodiac){
+  const container = document.getElementById('statBars');
+  container.innerHTML = '';
+  const rows = [
+    {label:'CHARISMA',  val: stats.charisma  || 5},
+    {label:'WISDOM',    val: stats.wisdom    || 5},
+    {label:'INTUITION', val: stats.intuition || 5},
+    {label:'RESILIENCE',val: stats.resilience|| 5},
+  ];
+  rows.forEach(r=>{
+    const pct = Math.min(10, Math.max(1, r.val)) * 10;
+    const div = document.createElement('div');
+    div.className = 'stat-row';
+    div.innerHTML = `
+      <span class="stat-label">${r.label}</span>
+      <span class="stat-val">${r.val}/10</span>
+      <div class="stat-bar-wrap"><div class="stat-bar" data-pct="${pct}"></div></div>`;
+    container.appendChild(div);
+  });
+  // Animate after render
+  setTimeout(()=>{
+    container.querySelectorAll('.stat-bar').forEach(b=>{
+      b.style.width = b.dataset.pct+'%';
     });
+  }, 200);
+}
 
-    const generateProfile = async () => {
-        const dob = document.getElementById('dob').value;
-        const tob = document.getElementById('tob').value;
-        const province = document.getElementById('province').value;
+// ── TYPEWRITER ────────────────────────────────────────────────
+function typewriter(el, text, speed=25){
+  el.textContent='';
+  let i=0;
+  const cursor = document.createElement('span');
+  cursor.className = 'dialog-cursor';
+  el.appendChild(cursor);
+  const iv = setInterval(()=>{
+    if(i<text.length){
+      el.insertBefore(document.createTextNode(text[i]), cursor);
+      i++;
+    } else {
+      clearInterval(iv);
+      cursor.remove();
+    }
+  }, speed);
+}
 
-        if (!dob || !tob || !province) {
-            alert('กรุณากรอกข้อมูลให้ครบถ้วนก่อนทำการวิเคราะห์');
-            return;
-        }
+// ── RENDER PROFILE ────────────────────────────────────────────
+function renderProfile(data, zodiac){
+  // Sprite
+  drawSprite(zodiac);
+  document.getElementById('classLabel').textContent = data.class || zodiac.name;
+  document.getElementById('profileTitle').textContent = '▸ '+(data.class||zodiac.name)+' ◂';
 
-        const userData = `Date of Birth: ${dob}, Time: ${tob}, Province: ${province}`;
-        
-        // Hide form, show loading
-        document.getElementById('inputForm').classList.add('hidden');
-        document.getElementById('loadingScreen').classList.remove('hidden');
-        const prompt = `Based on Western astrology for the following user details (${userData}), generate a short RPG Character Status profile. 
-        Format as plain text with clear headings:
-        [CLASS] (based on zodiac/traits)
-        [ELEMENT]
-        [STRENGTHS]
-        [WEAKNESSES]
-        [PERSONALITY]
-        Keep it concise, similar to MBTI, but astrological. Write in Thai language. Use an RPG game tone.`;
+  // Big Three
+  document.getElementById('sunSignText').textContent = data.sun_sign || zodiac.name;
+  document.getElementById('moonSignText').textContent = data.moon_sign || 'UNKNOWN';
+  document.getElementById('risingSignText').textContent = data.rising_sign || 'UNKNOWN';
 
-        try {
-            const resp = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ question: prompt })
-            });
-            const data = await resp.json();
-            
-            document.getElementById('loadingScreen').classList.add('hidden');
-            const profileContent = document.getElementById('profileContent');
-            
-            if (data.error) {
-                profileContent.textContent = "SYSTEM ERROR: " + data.error;
-            } else {
-                profileContent.textContent = data.answer;
-                document.getElementById('actionContainer').classList.remove('hidden');
-            }
-            profileContent.classList.remove('hidden');
+  // Stats
+  renderStatBars(data.stats || {}, zodiac);
 
-        } catch (e) {
-            document.getElementById('loadingScreen').classList.add('hidden');
-            const profileContent = document.getElementById('profileContent');
-            profileContent.textContent = "CONNECTION FAILED. THE STARS ARE UNREACHABLE.";
-            profileContent.classList.remove('hidden');
-            console.error(e);
-        }
-    };
+  // Personality
+  document.getElementById('personalityText').textContent = data.personality || '';
 
-    // Ask AI Button logic
-    document.getElementById('askAiBtn').addEventListener('click', async () => {
-        const question = prompt("ถามคำถามเกี่ยวกับดวงชะตาหรือคำแนะนำส่วนตัวของคุณ (ตัวอย่าง: วันนี้ฉันควรโฟกัสเรื่องอะไร?)");
-        if (!question) return;
-        
-        const btn = document.getElementById('askAiBtn');
-        const resultDiv = document.getElementById('askAiResult');
-        const waitlistBtn = document.getElementById('waitlistBtn');
+  // Strengths
+  const sl = document.getElementById('strengthsList');
+  sl.innerHTML = '';
+  (data.strengths||[]).forEach(s=>{
+    const li = document.createElement('li');
+    li.textContent = s;
+    sl.appendChild(li);
+  });
 
-        btn.disabled = true;
-        btn.textContent = 'SYSTEM PROCESSING...';
-        
-        try {
-            const context = document.getElementById('profileContent').textContent;
-            // Provide some context so AI knows it's the same user
-            const aiPrompt = `นี่คือโปรไฟล์โหราศาสตร์ของฉัน:\n${context}\n\nคำถามของฉันคือ: ${question}\nช่วยตอบคำถามนี้แบบสั้นกระชับ เป็นภาษาไทย และรักษาโทนความเป็นผู้ให้คำปรึกษาทางโหราศาสตร์ไว้`;
+  // Weaknesses
+  const wl = document.getElementById('weaknessesList');
+  wl.innerHTML = '';
+  (data.weaknesses||[]).forEach(w=>{
+    const li = document.createElement('li');
+    li.textContent = w;
+    wl.appendChild(li);
+  });
 
-            const resp = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ question: aiPrompt })
-            });
-            const data = await resp.json();
+  // Special
+  document.getElementById('specialAbility').textContent = data.special_ability || '';
 
-            if (data.error) {
-                alert('ERROR: ' + data.error);
-            } else {
-                resultDiv.textContent = `คำตอบ: ${data.answer}`;
-                resultDiv.classList.remove('hidden');
-                // Show waitlist button
-                waitlistBtn.classList.remove('hidden');
-            }
-        } catch (e) {
-            alert('CONNECTION FAILED.');
-            console.error(e);
-        } finally {
-            btn.disabled = false;
-            btn.textContent = 'ลองถาม AI อีกครั้ง';
-        }
+  showScreen('screen-profile');
+}
+
+// ── SHARE ─────────────────────────────────────────────────────
+document.getElementById('shareBtn').addEventListener('click', async ()=>{
+  const text = '✦ ดูโปรไฟล์ดวงชะตา RPG ของฉันบน Muniel!\n🔮 Western Astrology · Natal Chart\n\nhttps://acceltrinity.tech';
+  if(navigator.share){
+    try{ await navigator.share({title:'Muniel — Character Status', text, url:'https://acceltrinity.tech'}); }
+    catch(e){}
+  } else {
+    try {
+      await navigator.clipboard.writeText(text);
+      const btn = document.getElementById('shareBtn');
+      const orig = btn.textContent;
+      btn.textContent = '✓ COPIED TO CLIPBOARD';
+      setTimeout(()=>btn.textContent=orig, 2000);
+    } catch(e){ alert('https://acceltrinity.tech'); }
+  }
+});
+
+// ── ASK AI ────────────────────────────────────────────────────
+document.getElementById('askAiBtn').addEventListener('click', async ()=>{
+  const question = prompt('ถามคำถามเกี่ยวกับดวงชะตาของคุณ\n(เช่น: จุดแข็งของฉันเหมาะกับอาชีพอะไร?)');
+  if(!question) return;
+  const btn = document.getElementById('askAiBtn');
+  const dialog = document.getElementById('dialogBox');
+  const dialogText = document.getElementById('dialogText');
+  btn.disabled = true;
+  btn.textContent = 'ORACLE THINKING...';
+  dialog.style.display = 'block';
+  dialogText.textContent = '';
+
+  const profileSummary = document.getElementById('specialAbility').textContent;
+  const prompt_ = `โปรไฟล์โหราศาสตร์ของผู้ถาม:\n${profileSummary}\n\nคำถาม: ${question}\n\nตอบสั้นๆ กระชับ ไม่เกิน 3 ประโยค เป็นภาษาไทย โทนผู้รู้ดูดวง`;
+
+  try{
+    const resp = await fetch('https://muniel-alpha.vercel.app/api/ask',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({question: prompt_})
     });
+    const data = await resp.json();
+    typewriter(dialogText, data.answer || 'ดวงดาวเงียบงัน...', 30);
+    document.getElementById('waitlistBtn').classList.remove('hidden');
+  } catch(e){
+    dialogText.textContent = 'CONNECTION FAILED. THE ORACLE IS SILENT.';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '✦ ถาม AI อีกครั้ง';
+  }
+});
 
-    // Start profile generation on load is removed since we wait for button click
+// ── MAIN ──────────────────────────────────────────────────────
+async function main(){
+  const dob      = localStorage.getItem('muniel_dob');
+  const tob      = localStorage.getItem('muniel_tob');
+  const province = localStorage.getItem('muniel_province');
+
+  if(!dob || !tob || !province){
+    window.location.href = 'index.html';
+    return;
+  }
+
+  const zodiac = getZodiac(dob);
+  showScreen('screen-loading');
+
+  const logEl = document.getElementById('loadingLog');
+  const barEl = document.getElementById('progressBar');
+  const logInterval = setInterval(()=>tickLog(logEl, barEl), 700);
+
+  const dobFormatted = new Date(dob).toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'});
+
+  const aiPrompt = `คุณคือนักโหราศาสตร์ตะวันตกผู้เชี่ยวชาญ Natal Chart
+โปรดคำนวณและวิเคราะห์โปรไฟล์ดวงชะตาของผู้ใช้ที่เกิด:
+- วันเกิด: ${dobFormatted}
+- เวลาเกิด: ${tob}
+- จังหวัด: ${province}
+
+(จงใช้ความรู้ทางโหราศาสตร์ประเมิน Sun Sign, Moon Sign, และ Rising Sign (ลัคนา) ให้ใกล้เคียงความจริงที่สุดจากข้อมูลข้างต้น)
+
+ตอบเป็น JSON เท่านั้น (ไม่ต้องมี markdown code block) โดยใช้รูปแบบนี้:
+{
+  "class": "ชื่อคลาสตัวละคร RPG ภาษาอังกฤษ เช่น SHADOW SAGE / IRON WARRIOR (1-2 คำ ใหญ่ทั้งหมด)",
+  "sun_sign": "ราศี...",
+  "moon_sign": "ราศี...",
+  "rising_sign": "ราศี...",
+  "personality": "คำอธิบายบุคลิกภาพสั้นๆ 2-3 ประโยค เป็นภาษาไทย แม่นยำตามดาว",
+  "strengths": ["จุดแข็ง 1", "จุดแข็ง 2", "จุดแข็ง 3"],
+  "weaknesses": ["จุดอ่อน 1", "จุดอ่อน 2"],
+  "special_ability": "ความสามารถพิเศษ 1 ประโยค เป็นภาษาไทย สไตล์ RPG",
+  "stats": {
+    "charisma": <ตัวเลข 1-10>,
+    "wisdom": <ตัวเลข 1-10>,
+    "intuition": <ตัวเลข 1-10>,
+    "resilience": <ตัวเลข 1-10>
+  }
+}`;
+
+  try{
+    const resp = await fetch('https://muniel-alpha.vercel.app/api/ask',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({question: aiPrompt})
+    });
+    const data = await resp.json();
+    clearInterval(logInterval);
+    barEl.style.width = '100%';
+
+    // Parse JSON from AI
+    let profile;
+    try{
+      // Strip possible markdown fences
+      const raw = (data.answer||'').replace(/```json|```/g,'').trim();
+      profile = JSON.parse(raw);
+    } catch(e){
+      // Fallback if AI didn't return valid JSON
+      profile = {
+        class: zodiac.name,
+        personality: data.answer || 'ดวงดาวเปิดเผยความลับของคุณ...',
+        strengths: ['มีเสน่ห์ดึงดูดใจ', 'ใจแข็งและมุ่งมั่น'],
+        weaknesses: ['ไม่ชอบถูกบังคับ'],
+        special_ability: 'พลังแห่งดวงดาวดั้งเดิม',
+        stats: {charisma:7, wisdom:7, intuition:7, resilience:7}
+      };
+    }
+
+    await new Promise(r=>setTimeout(r,400));
+    renderProfile(profile, zodiac);
+
+  } catch(e){
+    clearInterval(logInterval);
+    showScreen('screen-error');
+  }
+}
+
+window.onload = main;
 </script>
 </body>
 </html>
