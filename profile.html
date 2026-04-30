@@ -353,11 +353,6 @@ function renderProfile(data, zodiac){
   document.getElementById('classLabel').textContent = data.class || zodiac.name;
   document.getElementById('profileTitle').textContent = '▸ '+(data.class||zodiac.name)+' ◂';
 
-  // Big Three
-  document.getElementById('sunSignText').textContent = data.sun_sign || zodiac.name;
-  document.getElementById('moonSignText').textContent = data.moon_sign || 'UNKNOWN';
-  document.getElementById('risingSignText').textContent = data.rising_sign || 'UNKNOWN';
-
   // Stats
   renderStatBars(data.stats || {}, zodiac);
 
@@ -457,21 +452,39 @@ async function main(){
 
   const dobFormatted = new Date(dob).toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'});
 
-  const aiPrompt = `คุณคือนักโหราศาสตร์ตะวันตกผู้เชี่ยวชาญ Natal Chart
-โปรดคำนวณและวิเคราะห์โปรไฟล์ดวงชะตาของผู้ใช้ที่เกิด:
-- วันเกิด: ${dobFormatted}
-- เวลาเกิด: ${tob}
-- จังหวัด: ${province}
+  // Call /api/calculate to get mathematically accurate Big Three
+  let exactSigns = { sun_sign: zodiac.en, moon_sign: "UNKNOWN", rising_sign: "UNKNOWN" };
+  try {
+    const calcResp = await fetch('https://muniel-alpha.vercel.app/api/calculate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dob, tob, province })
+    });
+    const calcData = await calcResp.json();
+    if (!calcData.error) {
+      exactSigns = calcData;
+    }
+  } catch(e) {
+    console.error("Calculation failed", e);
+  }
 
-(จงใช้ความรู้ทางโหราศาสตร์ประเมิน Sun Sign, Moon Sign, และ Rising Sign (ลัคนา) ให้ใกล้เคียงความจริงที่สุดจากข้อมูลข้างต้น)
+  // Pre-fill the Big Three UI immediately
+  document.getElementById('sunSignText').textContent = (exactSigns.sun_sign || zodiac.en).toUpperCase();
+  document.getElementById('moonSignText').textContent = (exactSigns.moon_sign || 'UNKNOWN').toUpperCase();
+  document.getElementById('risingSignText').textContent = (exactSigns.rising_sign || 'UNKNOWN').toUpperCase();
+
+  const aiPrompt = `คุณคือนักโหราศาสตร์ตะวันตกผู้เชี่ยวชาญ Natal Chart
+ผู้ใช้คนนี้ได้รับการคำนวณตำแหน่งดวงดาวทางดาราศาสตร์อย่างแม่นยำแล้ว พบว่า:
+- Sun Sign: ${exactSigns.sun_sign}
+- Moon Sign: ${exactSigns.moon_sign}
+- Rising Sign (Ascendant): ${exactSigns.rising_sign}
+
+จงใช้ข้อมูลดวงดาวข้างต้น วิเคราะห์เป็นโปรไฟล์ดวงชะตาสไตล์เกม RPG
 
 ตอบเป็น JSON เท่านั้น (ไม่ต้องมี markdown code block) โดยใช้รูปแบบนี้:
 {
   "class": "ชื่อคลาสตัวละคร RPG ภาษาอังกฤษ เช่น SHADOW SAGE / IRON WARRIOR (1-2 คำ ใหญ่ทั้งหมด)",
-  "sun_sign": "ราศี...",
-  "moon_sign": "ราศี...",
-  "rising_sign": "ราศี...",
-  "personality": "คำอธิบายบุคลิกภาพสั้นๆ 2-3 ประโยค เป็นภาษาไทย แม่นยำตามดาว",
+  "personality": "คำอธิบายบุคลิกภาพสั้นๆ 2-3 ประโยค เป็นภาษาไทย แม่นยำตามการผสมผสานของ Sun, Moon, Rising",
   "strengths": ["จุดแข็ง 1", "จุดแข็ง 2", "จุดแข็ง 3"],
   "weaknesses": ["จุดอ่อน 1", "จุดอ่อน 2"],
   "special_ability": "ความสามารถพิเศษ 1 ประโยค เป็นภาษาไทย สไตล์ RPG",
