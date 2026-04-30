@@ -36,7 +36,8 @@ module.exports = async (req, res) => {
     const answer = response.data.choices[0]?.message?.content || 'ไม่มีคำตอบ';
     return res.status(200).json({ answer });
   } catch (error) {
-    console.error('Error:', error.response?.data || error.message);
-    return res.status(500).json({ error: 'Failed to generate answer' });
+    const errorDetails = error.response?.data || error.message;
+    console.error('Error:', errorDetails);
+    return res.status(500).json({ error: 'Failed to generate answer', details: errorDetails });
   }
 };
