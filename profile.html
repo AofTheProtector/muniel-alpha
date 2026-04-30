@@ -38,12 +38,12 @@ body{background:var(--bg);color:var(--white);font-family:'Press Start 2P',monosp
 .rpg-box{width:100%;border:3px solid var(--white);background:#000;padding:20px 18px;box-shadow:6px 6px 0 #333}
 .rpg-box-title{font-size:0.5em;color:var(--gray);letter-spacing:2px;text-align:center;border-bottom:1px dashed #333;padding-bottom:10px;margin-bottom:16px}
 
-/* ── CHARACTER PANEL ── */
-.char-panel{display:flex;gap:16px;align-items:flex-start;width:100%}
-.char-sprite-wrap{flex-shrink:0;width:96px;display:flex;flex-direction:column;align-items:center;gap:8px}
-.char-sprite{width:96px;height:96px;image-rendering:pixelated;border:2px solid #333;object-fit:cover;border-radius:4px;box-shadow:0 0 15px rgba(255,215,0,0.3)}
-.char-class-label{font-size:0.3em;color:var(--gold);text-align:center;letter-spacing:1px}
-.char-stats{flex:1;display:flex;flex-direction:column;gap:10px}
+/* ── HERO AVATAR ── */
+.hero-avatar{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:20px;margin-top:10px;width:100%}
+.hero-avatar img{width:160px;height:160px;object-fit:cover;border-radius:8px;border:3px solid #333;image-rendering:pixelated;box-shadow:0 0 25px rgba(255,215,0,0.25)}
+.hero-class{font-size:0.65em;color:var(--gold);letter-spacing:2px;text-align:center;text-shadow:2px 2px 0 #333;line-height:1.4}
+.hero-title{font-size:0.4em;color:var(--white);letter-spacing:1px;text-align:center;background:#222;padding:6px 12px;border:1px solid #444;border-radius:4px}
+.char-stats{width:100%;display:flex;flex-direction:column;gap:12px}
 
 /* ── STAT ROW ── */
 .stat-row{display:flex;flex-direction:column;gap:4px}
@@ -113,16 +113,17 @@ body{background:var(--bg);color:var(--white);font-family:'Press Start 2P',monosp
   <!-- PROFILE SCREEN -->
   <div id="screen-profile" class="screen">
 
-    <!-- Character Panel -->
-    <div class="rpg-box">
-      <div class="rpg-box-title" id="profileTitle">▸ CHARACTER STATUS ◂</div>
-      <div class="char-panel">
-        <div class="char-sprite-wrap">
-          <img id="spriteImg" class="char-sprite" src="" alt="Avatar">
-          <div class="char-class-label" id="classLabel">LOADING</div>
-        </div>
-        <div class="char-stats" id="statBars"></div>
-      </div>
+    <!-- MBTI Style Hero Avatar -->
+    <div class="hero-avatar">
+      <img id="spriteImg" src="" alt="Avatar">
+      <div class="hero-class" id="classLabel">LOADING</div>
+      <div class="hero-title" id="titleLabel">...</div>
+    </div>
+
+    <!-- CORE TRAITS -->
+    <div class="rpg-box" style="margin-top: 0;">
+      <div class="rpg-box-title">▸ CORE TRAITS ◂</div>
+      <div class="char-stats" id="statBars"></div>
       <!-- LIFE PATH -->
       <div style="margin-top:16px; padding-top:12px; border-top:1px dashed #333; display:flex; justify-content:center; align-items:center; gap:20px; font-size:0.4em;">
         <div style="color:var(--gray)">SOUL NUMBER</div>
@@ -255,10 +256,10 @@ function renderStatBars(stats, nData){
   const container = document.getElementById('statBars');
   container.innerHTML = '';
   const rows = [
-    {label:'CHARISMA',  val: stats.charisma  || 5},
-    {label:'WISDOM',    val: stats.wisdom    || 5},
-    {label:'INTUITION', val: stats.intuition || 5},
-    {label:'RESILIENCE',val: stats.resilience|| 5},
+    {label:'WILLPOWER (พลังใจ/ผู้นำ)', val: stats.willpower  || 5},
+    {label:'EMPATHY (ความเห็นอกเห็นใจ)', val: stats.empathy    || 5},
+    {label:'CREATIVITY (ความคิดสร้างสรรค์)', val: stats.creativity || 5},
+    {label:'LOGIC (ตรรกะ/เหตุผล)', val: stats.logic      || 5},
   ];
   rows.forEach(r=>{
     const pct = Math.min(10, Math.max(1, r.val)) * 10;
@@ -301,7 +302,7 @@ function renderProfile(data, nData, lifePathNum){
   // Sprite
   drawSprite(nData);
   document.getElementById('classLabel').textContent = data.class || nData.class;
-  document.getElementById('profileTitle').textContent = '▸ '+(data.class||nData.class)+' ◂';
+  document.getElementById('titleLabel').textContent = nData.title;
 
   // Stats
   renderStatBars(data.stats || {}, nData);
@@ -422,10 +423,10 @@ async function main(){
   "weaknesses": ["ความท้าทายในชีวิตที่ต้องก้าวผ่าน 1 (ตั้งชื่อสไตล์ RPG)", "ความท้าทาย 2"],
   "special_ability": "พรสวรรค์ที่ซ่อนอยู่ 1 ประโยค (ภาษาไทย สไตล์ RPG)",
   "stats": {
-    "charisma": <ตัวเลข 1-10>,
-    "wisdom": <ตัวเลข 1-10>,
-    "intuition": <ตัวเลข 1-10>,
-    "resilience": <ตัวเลข 1-10>
+    "willpower": <ตัวเลข 1-10>,
+    "empathy": <ตัวเลข 1-10>,
+    "creativity": <ตัวเลข 1-10>,
+    "logic": <ตัวเลข 1-10>
   }
 }`;
 
@@ -453,7 +454,7 @@ async function main(){
         strengths: ['พลังใจเข้มแข็ง', 'สติปัญญาเฉียบแหลม'],
         weaknesses: ['ความลังเลในบางช่วงเวลา'],
         special_ability: 'พลังแห่งศาสตร์ตัวเลขดั้งเดิม',
-        stats: {charisma:7, wisdom:7, intuition:7, resilience:7}
+        stats: {willpower:7, empathy:7, creativity:7, logic:7}
       };
     }
 
