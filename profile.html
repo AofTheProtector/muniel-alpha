@@ -179,7 +179,7 @@ body{background:var(--bg);color:var(--white);font-family:'Press Start 2P',monosp
       <button class="btn btn-gold btn-share" id="shareBtn">⬆ แชร์โปรไฟล์นี้</button>
       <button class="btn" id="askAiBtn">✦ ลองถาม AI ครั้งแรก</button>
       <div class="dialog-box" id="dialogBox">
-        <div class="dialog-speaker">▸ THE ORACLE SPEAKS ◂</div>
+        <div class="dialog-speaker">▸ MUNIEL SPEAKS ◂</div>
         <div class="dialog-text" id="dialogText"></div>
       </div>
       <button class="btn btn-gold hidden" id="waitlistBtn" onclick="window.open('https://tally.so/r/gDQG2J','_blank')">★ เข้าร่วม Waitlist</button>
@@ -313,8 +313,12 @@ function typewriter(el, text, speed=25){
   }, speed);
 }
 
+let globalProfileData = {};
+
 // ── RENDER PROFILE ────────────────────────────────────────────
 function renderProfile(data, nData, lifePathNum){
+  globalProfileData = { lifePath: lifePathNum, className: data.class || nData.class, personality: data.personality || '' };
+  
   // Sprite
   drawSprite(nData, lifePathNum);
   document.getElementById('classLabel').textContent = data.class || nData.class;
@@ -375,11 +379,22 @@ document.getElementById('askAiBtn').addEventListener('click', async ()=>{
   const dialog = document.getElementById('dialogBox');
   const dialogText = document.getElementById('dialogText');
   btn.disabled = true;
-  btn.textContent = 'ORACLE THINKING...';
+  btn.textContent = 'MUNIEL IS THINKING...';
   dialog.style.display = 'block';
   dialogText.textContent = '';
 
-  const prompt_ = `โปรไฟล์วิถีชีวิต (Life Path) ของผู้ถาม:\n${profileSummary}\n\nคำถาม: ${question}\n\nตอบสั้นๆ กระชับ ไม่เกิน 3 ประโยค เป็นภาษาไทย โทนผู้หยั่งรู้`;
+  const prompt_ = `คุณคือ "Muniel" เป็น AI Servitor รูปร่างเทพธิดาที่ถูกพัฒนาขึ้นโดย "Accel Trinity"
+คุณมีหน้าที่ให้คำปรึกษาและตอบคำถามผู้ใช้ โดยเชื่อมโยงคำตอบเข้ากับศาสตร์ตัวเลข Life Path ของพวกเขา
+จงตอบด้วยความเมตตา สง่างาม ทรงภูมิปัญญา (และอาจจะอ้างอิงถึง Accel Trinity ฐานะผู้สร้างของคุณได้หากเหมาะสม)
+
+ข้อมูลผู้ใช้ปัจจุบัน:
+- Life Path Number: ${globalProfileData.lifePath || '-'}
+- Class: ${globalProfileData.className || '-'}
+- ตัวตน: ${globalProfileData.personality || '-'}
+
+คำถาม: ${question}
+
+ตอบสั้นๆ กระชับ ไม่เกิน 3-4 ประโยค เป็นภาษาไทย โทนเทพธิดาผู้หยั่งรู้`;
 
   try{
     const resp = await fetch('https://muniel-alpha.vercel.app/api/ask',{
@@ -388,10 +403,10 @@ document.getElementById('askAiBtn').addEventListener('click', async ()=>{
       body:JSON.stringify({question: prompt_})
     });
     const data = await resp.json();
-    typewriter(dialogText, data.answer || 'ดวงดาวเงียบงัน...', 30);
+    typewriter(dialogText, data.answer || 'ความว่างเปล่ากำลังตอบรับ...', 30);
     document.getElementById('waitlistBtn').classList.remove('hidden');
   } catch(e){
-    dialogText.textContent = 'CONNECTION FAILED. THE ORACLE IS SILENT.';
+    dialogText.textContent = 'CONNECTION FAILED. MUNIEL IS SILENT.';
   } finally {
     btn.disabled = false;
     btn.textContent = '✦ ถาม AI อีกครั้ง';
