@@ -20,8 +20,10 @@ module.exports = async (req, res) => {
     const response = await axios.post(
       'https://openrouter.ai/api/v1/chat/completions',
       {
-        model: 'nvidia/nemotron-3-super-120b-a12b:free',
+        model: 'meta-llama/llama-3.3-70b-instruct:free',
         messages: [{ role: 'user', content: question }],
+        max_tokens: 300,
+        temperature: 0.7
       },
       {
         headers: {
