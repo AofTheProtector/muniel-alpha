@@ -218,10 +218,9 @@ function getLifePath(dobString){
 }
 
 // ── AVATAR RENDERER ───────────────────────────────────────────
-function drawSprite(nData){
+function drawSprite(nData, lifePathNum){
   const img = document.getElementById('spriteImg');
-  const el = nData.element.toLowerCase();
-  img.src = `assets/sprites/${el}.png`;
+  img.src = `assets/sprites/${lifePathNum}.png`;
   img.style.borderColor = nData.color;
   img.style.boxShadow = `0 0 15px ${nData.color}66`;
 }
@@ -300,7 +299,7 @@ function typewriter(el, text, speed=25){
 // ── RENDER PROFILE ────────────────────────────────────────────
 function renderProfile(data, nData, lifePathNum){
   // Sprite
-  drawSprite(nData);
+  drawSprite(nData, lifePathNum);
   document.getElementById('classLabel').textContent = data.class || nData.class;
   document.getElementById('titleLabel').textContent = nData.title;
 
