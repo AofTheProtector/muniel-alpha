@@ -471,10 +471,13 @@ async function main(){
     // Parse JSON from AI
     let profile;
     try{
-      // Strip possible markdown fences
-      const raw = (data.answer||'').replace(/```json|```/g,'').trim();
+      // Extract JSON using regex in case the model adds conversational text
+      let raw = data.answer || '';
+      const match = raw.match(/\{[\s\S]*\}/);
+      if(match) { raw = match[0]; }
       profile = JSON.parse(raw);
     } catch(e){
+      console.error("JSON PARSE ERROR:", e, "RAW STRING:", data.answer);
       // Fallback if AI didn't return valid JSON
       profile = {
         class: nData.class,
