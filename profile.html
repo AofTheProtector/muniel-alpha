@@ -93,7 +93,7 @@ body{background:var(--bg);color:var(--white);font-family:'Press Start 2P',monosp
 
   <div class="page-header">
     <h1>✦ MUNIEL ✦</h1>
-    <div class="sub">NATAL CHART · CHARACTER STATUS</div>
+    <div class="sub">LIFE PATH PROFILE</div>
   </div>
 
   <div class="pixel-divider"></div>
@@ -123,12 +123,10 @@ body{background:var(--bg);color:var(--white);font-family:'Press Start 2P',monosp
         </div>
         <div class="char-stats" id="statBars"></div>
       </div>
-      
-      <!-- THE BIG THREE -->
-      <div style="margin-top:16px; padding-top:12px; border-top:1px dashed #333; display:flex; justify-content:space-between; font-size:0.35em;">
-        <div><span style="color:var(--gold)">SUN:</span> <span id="sunSignText" style="color:var(--white)">-</span></div>
-        <div><span style="color:#aaa">MOON:</span> <span id="moonSignText" style="color:var(--white)">-</span></div>
-        <div><span style="color:#88aaff">RISING:</span> <span id="risingSignText" style="color:var(--white)">-</span></div>
+      <!-- LIFE PATH -->
+      <div style="margin-top:16px; padding-top:12px; border-top:1px dashed #333; display:flex; justify-content:center; align-items:center; gap:20px; font-size:0.4em;">
+        <div style="color:var(--gray)">SOUL NUMBER</div>
+        <div id="lifePathText" style="color:var(--gold); font-size:1.5em; text-shadow:2px 2px 0 #333;">-</div>
       </div>
     </div>
 
@@ -193,46 +191,46 @@ function initStars(){stars=[];for(let i=0;i<140;i++)stars.push({x:Math.random()*
 function drawStars(){ctx.clearRect(0,0,canvas.width,canvas.height);stars.forEach(s=>{s.alpha+=s.ts*s.td;if(s.alpha>=1||s.alpha<=.1)s.td*=-1;s.y-=s.spd;if(s.y<0){s.y=canvas.height;s.x=Math.random()*canvas.width}ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(240,240,240,${s.alpha})`;ctx.fill()});requestAnimationFrame(drawStars)}
 resizeCanvas();initStars();drawStars();window.addEventListener('resize',()=>{resizeCanvas();initStars()});
 
-// ── ZODIAC DATA ────────────────────────────────────────────────
-const ZODIAC = [
-  {name:'CAPRICORN',  en:'Capricorn',  dates:[[12,22],[1,19]],  element:'EARTH', color:'#aaaaaa'},
-  {name:'AQUARIUS',   en:'Aquarius',   dates:[[1,20],[2,18]],   element:'AIR',   color:'#88aaff'},
-  {name:'PISCES',     en:'Pisces',     dates:[[2,19],[3,20]],   element:'WATER', color:'#88ddff'},
-  {name:'ARIES',      en:'Aries',      dates:[[3,21],[4,19]],   element:'FIRE',  color:'#ff8888'},
-  {name:'TAURUS',     en:'Taurus',     dates:[[4,20],[5,20]],   element:'EARTH', color:'#aaffaa'},
-  {name:'GEMINI',     en:'Gemini',     dates:[[5,21],[6,20]],   element:'AIR',   color:'#ffff88'},
-  {name:'CANCER',     en:'Cancer',     dates:[[6,21],[7,22]],   element:'WATER', color:'#aaddff'},
-  {name:'LEO',        en:'Leo',        dates:[[7,23],[8,22]],   element:'FIRE',  color:'#ffcc44'},
-  {name:'VIRGO',      en:'Virgo',      dates:[[8,23],[9,22]],   element:'EARTH', color:'#ccffcc'},
-  {name:'LIBRA',      en:'Libra',      dates:[[9,23],[10,22]],  element:'AIR',   color:'#ffccff'},
-  {name:'SCORPIO',    en:'Scorpio',    dates:[[10,23],[11,21]], element:'WATER', color:'#cc44ff'},
-  {name:'SAGITTARIUS',en:'Sagittarius',dates:[[11,22],[12,21]], element:'FIRE',  color:'#ff8844'},
-];
+// ── NUMEROLOGY DATA ─────────────────────────────────────────────
+const NUMEROLOGY = {
+  1: { class: "THE VANGUARD", title: "ผู้เบิกทาง", element: "FIRE", color: "#ff8888" },
+  2: { class: "THE ORACLE", title: "ผู้หยั่งรู้", element: "WATER", color: "#88ddff" },
+  3: { class: "THE BARD", title: "กวีแห่งแสง", element: "AIR", color: "#ffff88" },
+  4: { class: "THE ARCHITECT", title: "สถาปนิกศิลา", element: "EARTH", color: "#aaffaa" },
+  5: { class: "THE EXPLORER", title: "นักท่องโลกา", element: "AIR", color: "#ffccff" },
+  6: { class: "THE PALADIN", title: "อัศวินศักดิ์สิทธิ์", element: "EARTH", color: "#ccffcc" },
+  7: { class: "THE SAGE", title: "ปราชญ์เร้นลับ", element: "WATER", color: "#cc44ff" },
+  8: { class: "THE COMMANDER", title: "จอมทัพ", element: "FIRE", color: "#ffcc44" },
+  9: { class: "THE MYSTIC", title: "นักเวทมนตรา", element: "WATER", color: "#ff8844" },
+  11:{ class: "THE LUMINARY", title: "ผู้นำแสงสว่าง (Master Number)", element: "AIR", color: "#ffffff" },
+  22:{ class: "THE GRANDMASTER", title: "ปรมาจารย์แห่งผู้สร้าง (Master Number)", element: "EARTH", color: "#aaaaaa" },
+  33:{ class: "THE ASCENDED", title: "ผู้ตื่นรู้ (Master Number)", element: "FIRE", color: "#ffd700" }
+};
 
-function getZodiac(dob){
-  const d=new Date(dob), m=d.getMonth()+1, day=d.getDate();
-  for(const z of ZODIAC){
-    const [s,e]=z.dates;
-    if((m===s[0]&&day>=s[1])||(m===e[0]&&day<=e[1]))return z;
+function getLifePath(dobString){
+  const digits = dobString.replace(/\D/g, '').split('').map(Number);
+  let sum = digits.reduce((a, b) => a + b, 0);
+  while (sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) {
+    sum = String(sum).split('').reduce((a, b) => a + Number(b), 0);
   }
-  return ZODIAC[0];
+  return sum;
 }
 
 // ── AVATAR RENDERER ───────────────────────────────────────────
-function drawSprite(zodiac){
+function drawSprite(nData){
   const img = document.getElementById('spriteImg');
-  const el = zodiac.element.toLowerCase();
+  const el = nData.element.toLowerCase();
   img.src = `assets/sprites/${el}.png`;
-  img.style.borderColor = zodiac.color;
-  img.style.boxShadow = `0 0 15px ${zodiac.color}66`;
+  img.style.borderColor = nData.color;
+  img.style.boxShadow = `0 0 15px ${nData.color}66`;
 }
 
 // ── LOADING SIMULATION ─────────────────────────────────────────
 const logLines = [
-  '> LOADING NATAL CHART ENGINE...',
-  '> CALCULATING PLANETARY POSITIONS...',
-  '> MAPPING HOUSE SYSTEMS...',
-  '> ANALYZING ASPECT PATTERNS...',
+  '> INITIALIZING NUMEROLOGY ENGINE...',
+  '> DECODING BIRTH FREQUENCY...',
+  '> CALCULATING LIFE PATH NUMBER...',
+  '> SUMMONING SOUL ARCHETYPE...',
   '> GENERATING CHARACTER CLASS...',
   '> COMPUTING STAT DISTRIBUTION...',
   '> FINALIZING PROFILE...',
@@ -253,7 +251,7 @@ function showScreen(id){
 }
 
 // ── STAT BARS ─────────────────────────────────────────────────
-function renderStatBars(stats, zodiac){
+function renderStatBars(stats, nData){
   const container = document.getElementById('statBars');
   container.innerHTML = '';
   const rows = [
@@ -299,14 +297,14 @@ function typewriter(el, text, speed=25){
 }
 
 // ── RENDER PROFILE ────────────────────────────────────────────
-function renderProfile(data, zodiac){
+function renderProfile(data, nData, lifePathNum){
   // Sprite
-  drawSprite(zodiac);
-  document.getElementById('classLabel').textContent = data.class || zodiac.name;
-  document.getElementById('profileTitle').textContent = '▸ '+(data.class||zodiac.name)+' ◂';
+  drawSprite(nData);
+  document.getElementById('classLabel').textContent = data.class || nData.class;
+  document.getElementById('profileTitle').textContent = '▸ '+(data.class||nData.class)+' ◂';
 
   // Stats
-  renderStatBars(data.stats || {}, zodiac);
+  renderStatBars(data.stats || {}, nData);
 
   // Personality
   document.getElementById('personalityText').textContent = data.personality || '';
@@ -337,7 +335,7 @@ function renderProfile(data, zodiac){
 
 // ── SHARE ─────────────────────────────────────────────────────
 document.getElementById('shareBtn').addEventListener('click', async ()=>{
-  const text = '✦ ดูโปรไฟล์ดวงชะตา RPG ของฉันบน Muniel!\n🔮 Western Astrology · Natal Chart\n\nhttps://acceltrinity.tech';
+  const text = '✦ ดูโปรไฟล์ Life Path RPG ของฉันบน Muniel!\n🔮 Numerology · Soul Profile\n\nhttps://acceltrinity.tech';
   if(navigator.share){
     try{ await navigator.share({title:'Muniel — Character Status', text, url:'https://acceltrinity.tech'}); }
     catch(e){}
@@ -364,8 +362,7 @@ document.getElementById('askAiBtn').addEventListener('click', async ()=>{
   dialog.style.display = 'block';
   dialogText.textContent = '';
 
-  const profileSummary = document.getElementById('specialAbility').textContent;
-  const prompt_ = `โปรไฟล์โหราศาสตร์ของผู้ถาม:\n${profileSummary}\n\nคำถาม: ${question}\n\nตอบสั้นๆ กระชับ ไม่เกิน 3 ประโยค เป็นภาษาไทย โทนผู้รู้ดูดวง`;
+  const prompt_ = `โปรไฟล์วิถีชีวิต (Life Path) ของผู้ถาม:\n${profileSummary}\n\nคำถาม: ${question}\n\nตอบสั้นๆ กระชับ ไม่เกิน 3 ประโยค เป็นภาษาไทย โทนผู้หยั่งรู้`;
 
   try{
     const resp = await fetch('https://muniel-alpha.vercel.app/api/ask',{
@@ -386,16 +383,13 @@ document.getElementById('askAiBtn').addEventListener('click', async ()=>{
 
 // ── MAIN ──────────────────────────────────────────────────────
 async function main(){
-  const dob      = localStorage.getItem('muniel_dob');
-  const tob      = localStorage.getItem('muniel_tob');
-  const province = localStorage.getItem('muniel_province');
+  const dob = localStorage.getItem('muniel_dob');
 
-  if(!dob || !tob || !province){
+  if(!dob){
     window.location.href = 'index.html';
     return;
   }
 
-  const zodiac = getZodiac(dob);
   showScreen('screen-loading');
 
   const logEl = document.getElementById('loadingLog');
@@ -403,43 +397,28 @@ async function main(){
   const logInterval = setInterval(()=>tickLog(logEl, barEl), 700);
 
   const dobFormatted = new Date(dob).toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'});
+  
+  // Calculate Life Path
+  const lifePathNum = getLifePath(dob);
+  const nData = NUMEROLOGY[lifePathNum] || NUMEROLOGY[1];
 
-  // Call /api/calculate to get mathematically accurate Big Three
-  let exactSigns = { sun_sign: zodiac.en, moon_sign: "UNKNOWN", rising_sign: "UNKNOWN" };
-  try {
-    const calcResp = await fetch('https://muniel-alpha.vercel.app/api/calculate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dob, tob, province })
-    });
-    const calcData = await calcResp.json();
-    if (!calcData.error) {
-      exactSigns = calcData;
-    }
-  } catch(e) {
-    console.error("Calculation failed", e);
-  }
+  // Pre-fill UI immediately
+  document.getElementById('lifePathText').textContent = lifePathNum;
 
-  // Pre-fill the Big Three UI immediately
-  document.getElementById('sunSignText').textContent = (exactSigns.sun_sign || zodiac.en).toUpperCase();
-  document.getElementById('moonSignText').textContent = (exactSigns.moon_sign || 'UNKNOWN').toUpperCase();
-  document.getElementById('risingSignText').textContent = (exactSigns.rising_sign || 'UNKNOWN').toUpperCase();
+  const aiPrompt = `คุณคือนักจิตวิทยาและผู้เชี่ยวชาญด้าน Numerology (รหัสชีวิต)
+ผู้ใช้คนนี้มี Life Path Number: ${lifePathNum}
+ชื่อคลาสต้นแบบ: ${nData.class} (${nData.title})
+ธาตุหลัก: ${nData.element}
 
-  const aiPrompt = `คุณคือนักโหราศาสตร์ตะวันตกผู้เชี่ยวชาญ Natal Chart และนักจิตวิทยา
-ผู้ใช้คนนี้ได้รับการคำนวณตำแหน่งดวงดาวทางดาราศาสตร์อย่างแม่นยำแล้ว พบว่า:
-- Sun Sign: ${exactSigns.sun_sign}
-- Moon Sign: ${exactSigns.moon_sign}
-- Rising Sign (Ascendant): ${exactSigns.rising_sign}
-
-จงวิเคราะห์ดวงชะตาอย่างลึกซึ้ง จริงใจ และนำไปใช้พัฒนาชีวิตได้จริง (Practical & Sincere)
-โดยให้ "ห่อหุ้ม" ด้วยธีมคำศัพท์สไตล์เกม RPG แฟนตาซี (เช่น เปรียบเปรยอุปสรรคเป็นมอนสเตอร์ หรือจุดแข็งเป็นเวทมนตร์/สกิล) 
-ห้ามเขียนทีเล่นทีจริง หรือดูเป็นแค่เกมเด็กเล่น ให้ความรู้สึกเหมือนกำลังอ่านคำทำนายจาก Oracle หรือผู้ชี้แนะทางจิตวิญญาณที่ทรงพลัง
+จงวิเคราะห์จิตวิญญาณและเส้นทางชีวิตของผู้ใช้อย่างลึกซึ้ง จริงใจ และนำไปใช้พัฒนาชีวิตได้จริง (Practical & Sincere)
+โดยให้ "ห่อหุ้ม" ด้วยธีมคำศัพท์สไตล์เกม RPG แฟนตาซี (เช่น เปรียบเปรยอุปสรรคเป็นมอนสเตอร์ หรือจุดแข็งเป็นพลังเวทมนตร์/สกิล) 
+ห้ามเขียนทีเล่นทีจริง ให้ความรู้สึกเหมือนกำลังอ่านคำทำนายจาก Oracle หรือผู้ชี้แนะทางจิตวิญญาณที่ทรงพลัง
 
 ตอบเป็น JSON เท่านั้น (ไม่ต้องมี markdown code block) โดยใช้รูปแบบนี้:
 {
-  "class": "ชื่อคลาสตัวละคร RPG ที่สะท้อนตัวตนลึกๆ เช่น SHADOW SAGE / IRON WARRIOR (1-2 คำ ใหญ่ทั้งหมด)",
+  "class": "ชื่อคลาสตัวละคร RPG ที่สะท้อนตัวตนของ Life Path นี้ (ภาษาอังกฤษ 1-2 คำ ใหญ่ทั้งหมด เช่น THE VANGUARD)",
   "personality": "คำอธิบายบุคลิกภาพและการเดินทางของจิตวิญญาณ 3-4 ประโยค เป็นภาษาไทย อ่านแล้วซึ้ง ทรงพลัง และจริงใจ",
-  "strengths": ["จุดแข็งที่นำไปใช้ต่อยอดในชีวิตจริงได้ 1 (ตั้งชื่อแบบสกิล RPG)", "จุดแข็ง 2", "จุดแข็ง 3"],
+  "strengths": ["จุดแข็งที่นำไปใช้ต่อยอดในชีวิตจริงได้ 1 (ตั้งชื่อทักษะแบบสกิล RPG)", "จุดแข็ง 2", "จุดแข็ง 3"],
   "weaknesses": ["บาดแผลหรือความท้าทายในใจที่ต้องก้าวผ่าน 1 (ตั้งชื่อเป็นเควสต์/คำสาป)", "ความท้าทาย 2"],
   "special_ability": "พรสวรรค์ที่ซ่อนอยู่และวิธีดึงมาใช้ 1 ประโยค (ภาษาไทย สไตล์ RPG)",
   "stats": {
@@ -469,7 +448,7 @@ async function main(){
     } catch(e){
       // Fallback if AI didn't return valid JSON
       profile = {
-        class: zodiac.name,
+        class: nData.class,
         personality: data.answer || 'ดวงดาวเปิดเผยความลับของคุณ...',
         strengths: ['มีเสน่ห์ดึงดูดใจ', 'ใจแข็งและมุ่งมั่น'],
         weaknesses: ['ไม่ชอบถูกบังคับ'],
@@ -479,7 +458,7 @@ async function main(){
     }
 
     await new Promise(r=>setTimeout(r,400));
-    renderProfile(profile, zodiac);
+    renderProfile(profile, nData, lifePathNum);
 
   } catch(e){
     clearInterval(logInterval);

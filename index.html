@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Muniel — ค้นพบตัวละครในดวงชะตาของคุณ</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="วิเคราะห์ดวงชะตาในสไตล์ RPG — ค้นพบ Class, Element, Strengths และ Weaknesses ของคุณตามหลัก Western Astrology">
+    <meta name="description" content="วิเคราะห์ตัวตนในสไตล์ RPG — ค้นพบ Class, Element, Strengths และ Weaknesses ของคุณตามหลัก Life Path Number (Numerology)">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -233,8 +233,8 @@
     <div class="hero">
         <div class="logo">✦ MUNIEL ✦</div>
         <p class="tagline">
-            WESTERN ASTROLOGY ENGINE<br>
-            ── NATAL CHART RPG EDITION ──
+            NUMEROLOGY ENGINE<br>
+            ── LIFE PATH RPG EDITION ──
         </p>
     </div>
 
@@ -278,43 +278,15 @@
             <div class="error-msg" id="err-dob">⚠ กรุณาเลือกวันเกิด</div>
         </div>
 
-        <div class="form-group">
-            <label for="tob">เวลาเกิดโดยประมาณ / BIRTH TIME</label>
-            <select id="tob" class="rpg-input">
-                <option value="">── SELECT TIME ──</option>
-                <option value="00:00–02:00 (ดึกดื่น)">00:00–02:00 (ดึกดื่น)</option>
-                <option value="02:00–04:00 (ก่อนรุ่งอรุณ)">02:00–04:00 (ก่อนรุ่งอรุณ)</option>
-                <option value="04:00–06:00 (รุ่งอรุณ)">04:00–06:00 (รุ่งอรุณ)</option>
-                <option value="06:00–08:00 (เช้าตรู่)">06:00–08:00 (เช้าตรู่)</option>
-                <option value="08:00–10:00 (เช้า)">08:00–10:00 (เช้า)</option>
-                <option value="10:00–12:00 (สาย)">10:00–12:00 (สาย)</option>
-                <option value="12:00–14:00 (เที่ยงวัน)">12:00–14:00 (เที่ยงวัน)</option>
-                <option value="14:00–16:00 (บ่าย)">14:00–16:00 (บ่าย)</option>
-                <option value="16:00–18:00 (บ่ายแก่)">16:00–18:00 (บ่ายแก่)</option>
-                <option value="18:00–20:00 (ค่ำ)">18:00–20:00 (ค่ำ)</option>
-                <option value="20:00–22:00 (หัวค่ำ)">20:00–22:00 (หัวค่ำ)</option>
-                <option value="22:00–24:00 (ดึก)">22:00–24:00 (ดึก)</option>
-                <option value="ไม่ทราบเวลาเกิด">ไม่ทราบเวลาเกิด</option>
-            </select>
-            <div class="error-msg" id="err-tob">⚠ กรุณาเลือกเวลาเกิด</div>
-        </div>
 
-        <div class="form-group">
-            <label for="province">จังหวัดที่เกิด / BIRTH PROVINCE</label>
-            <select id="province" class="rpg-input">
-                <option value="">── SELECT PROVINCE ──</option>
-                <option value="กรุงเทพมหานคร">กรุงเทพมหานคร</option><option value="กระบี่">กระบี่</option><option value="กาญจนบุรี">กาญจนบุรี</option><option value="กาฬสินธุ์">กาฬสินธุ์</option><option value="กำแพงเพชร">กำแพงเพชร</option><option value="ขอนแก่น">ขอนแก่น</option><option value="จันทบุรี">จันทบุรี</option><option value="ฉะเชิงเทรา">ฉะเชิงเทรา</option><option value="ชลบุรี">ชลบุรี</option><option value="ชัยนาท">ชัยนาท</option><option value="ชัยภูมิ">ชัยภูมิ</option><option value="ชุมพร">ชุมพร</option><option value="เชียงราย">เชียงราย</option><option value="เชียงใหม่">เชียงใหม่</option><option value="ตรัง">ตรัง</option><option value="ตราด">ตราด</option><option value="ตาก">ตาก</option><option value="นครนายก">นครนายก</option><option value="นครปฐม">นครปฐม</option><option value="นครพนม">นครพนม</option><option value="นครราชสีมา">นครราชสีมา</option><option value="นครศรีธรรมราช">นครศรีธรรมราช</option><option value="นครสวรรค์">นครสวรรค์</option><option value="นนทบุรี">นนทบุรี</option><option value="นราธิวาส">นราธิวาส</option><option value="น่าน">น่าน</option><option value="บึงกาฬ">บึงกาฬ</option><option value="บุรีรัมย์">บุรีรัมย์</option><option value="ปทุมธานี">ปทุมธานี</option><option value="ประจวบคีรีขันธ์">ประจวบคีรีขันธ์</option><option value="ปราจีนบุรี">ปราจีนบุรี</option><option value="ปัตตานี">ปัตตานี</option><option value="พระนครศรีอยุธยา">พระนครศรีอยุธยา</option><option value="พังงา">พังงา</option><option value="พัทลุง">พัทลุง</option><option value="พิจิตร">พิจิตร</option><option value="พิษณุโลก">พิษณุโลก</option><option value="เพชรบุรี">เพชรบุรี</option><option value="เพชรบูรณ์">เพชรบูรณ์</option><option value="แพร่">แพร่</option><option value="พะเยา">พะเยา</option><option value="ภูเก็ต">ภูเก็ต</option><option value="มหาสารคาม">มหาสารคาม</option><option value="มุกดาหาร">มุกดาหาร</option><option value="แม่ฮ่องสอน">แม่ฮ่องสอน</option><option value="ยะลา">ยะลา</option><option value="ยโสธร">ยโสธร</option><option value="ร้อยเอ็ด">ร้อยเอ็ด</option><option value="ระนอง">ระนอง</option><option value="ระยอง">ระยอง</option><option value="ราชบุรี">ราชบุรี</option><option value="ลพบุรี">ลพบุรี</option><option value="ลำปาง">ลำปาง</option><option value="ลำพูน">ลำพูน</option><option value="เลย">เลย</option><option value="ศรีสะเกษ">ศรีสะเกษ</option><option value="สกลนคร">สกลนคร</option><option value="สงขลา">สงขลา</option><option value="สตูล">สตูล</option><option value="สมุทรปราการ">สมุทรปราการ</option><option value="สมุทรสงคราม">สมุทรสงคราม</option><option value="สมุทรสาคร">สมุทรสาคร</option><option value="สระแก้ว">สระแก้ว</option><option value="สระบุรี">สระบุรี</option><option value="สิงห์บุรี">สิงห์บุรี</option><option value="สุโขทัย">สุโขทัย</option><option value="สุพรรณบุรี">สุพรรณบุรี</option><option value="สุราษฎร์ธานี">สุราษฎร์ธานี</option><option value="สุรินทร์">สุรินทร์</option><option value="หนองคาย">หนองคาย</option><option value="หนองบัวลำภู">หนองบัวลำภู</option><option value="อ่างทอง">อ่างทอง</option><option value="อำนาจเจริญ">อำนาจเจริญ</option><option value="อุดรธานี">อุดรธานี</option><option value="อุตรดิตถ์">อุตรดิตถ์</option><option value="อุทัยธานี">อุทัยธานี</option><option value="อุบลราชธานี">อุบลราชธานี</option>
-            </select>
-            <div class="error-msg" id="err-province">⚠ กรุณาเลือกจังหวัดเกิด</div>
-        </div>
 
-        <button class="btn-analyze" id="analyzeBtn">▶ วิเคราะห์ดวงชะตา</button>
+        <button class="btn-analyze" id="analyzeBtn">▶ วิเคราะห์เส้นทางชีวิต</button>
     </div>
 
     <div class="pixel-divider"></div>
 
     <div class="footer-note">
-        POWERED BY WESTERN ASTROLOGY · NATAL CHART ENGINE<br>
+        POWERED BY NUMEROLOGY · LIFE PATH ENGINE<br>
         ข้อมูลของคุณจะถูกใช้สำหรับการวิเคราะห์เท่านั้น
     </div>
 
@@ -368,32 +340,20 @@
 
     // ─── FORM SUBMIT ─────────────────────────────────────────
     document.getElementById('analyzeBtn').addEventListener('click', () => {
-        const dob      = document.getElementById('dob').value;
-        const tob      = document.getElementById('tob').value;
-        const province = document.getElementById('province').value;
+        const dob = document.getElementById('dob').value;
+        const err = document.getElementById('err-dob');
 
-        let valid = true;
-
-        ['dob','tob','province'].forEach(id => {
-            const el = document.getElementById(id);
-            const err = document.getElementById('err-' + id);
-            const val = el.value;
-            if (!val) {
-                el.classList.add('invalid');
-                if (err) err.style.display = 'block';
-                valid = false;
-            } else {
-                el.classList.remove('invalid');
-                if (err) err.style.display = 'none';
-            }
-        });
-
-        if (!valid) return;
+        if (!dob) {
+            document.getElementById('dob').classList.add('invalid');
+            if (err) err.style.display = 'block';
+            return;
+        } else {
+            document.getElementById('dob').classList.remove('invalid');
+            if (err) err.style.display = 'none';
+        }
 
         // Save to localStorage and navigate
         localStorage.setItem('muniel_dob', dob);
-        localStorage.setItem('muniel_tob', tob);
-        localStorage.setItem('muniel_province', province);
 
         const btn = document.getElementById('analyzeBtn');
         btn.textContent = 'LOADING...';
