@@ -33,7 +33,10 @@ module.exports = async (req, res) => {
         },
       }
     );
-    const answer = response.data.choices[0]?.message?.content || 'ไม่มีคำตอบ';
+    const answer = response.data.choices[0]?.message?.content;
+    if (!answer) {
+      return res.status(200).json({ answer: 'ไม่มีคำตอบ', raw_data: response.data });
+    }
     return res.status(200).json({ answer });
   } catch (error) {
     const errorDetails = error.response?.data || error.message;
