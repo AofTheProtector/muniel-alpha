@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <title>Muniel — Character Status</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="โปรไฟล์ดวงชะตา RPG ของคุณ — วิเคราะห์จาก Western Astrology">
-<meta property="og:title" content="ดูโปรไฟล์ดวงชะตา RPG ของฉันบน Muniel">
-<meta property="og:description" content="ค้นพบ Class, Element, Strengths และ Weaknesses จากหลัก Natal Chart">
+<meta name="description" content="โปรไฟล์ Life Path RPG ของคุณ — วิเคราะห์จาก Numerology (เลขศาสตร์)">
+<meta property="og:title" content="ดูโปรไฟล์ Life Path RPG ของฉันบน Muniel">
+<meta property="og:description" content="ค้นพบ Class, Element, Strengths และ Weaknesses จาก Life Path Number">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -172,7 +172,7 @@ body{background:var(--bg);color:var(--white);font-family:'Press Start 2P',monosp
   <!-- ERROR SCREEN -->
   <div id="screen-error" class="screen">
     <div class="rpg-box error-screen">
-      <p>CONNECTION FAILED.<br>THE STARS ARE UNREACHABLE.<br><br>
+      <p>CONNECTION FAILED.<br>THE NUMBERS ARE UNREACHABLE.<br><br>
       <span style="color:var(--gray);font-size:0.8em">กรุณาลองใหม่อีกครั้ง</span></p>
       <div style="height:20px"></div>
       <button class="btn" onclick="window.location.href='index.html'">↩ RETRY</button>
@@ -193,18 +193,18 @@ resizeCanvas();initStars();drawStars();window.addEventListener('resize',()=>{res
 
 // ── NUMEROLOGY DATA ─────────────────────────────────────────────
 const NUMEROLOGY = {
-  1: { class: "THE VANGUARD", title: "ผู้เบิกทาง", element: "FIRE", color: "#ff8888" },
-  2: { class: "THE ORACLE", title: "ผู้หยั่งรู้", element: "WATER", color: "#88ddff" },
-  3: { class: "THE BARD", title: "กวีแห่งแสง", element: "AIR", color: "#ffff88" },
-  4: { class: "THE ARCHITECT", title: "สถาปนิกศิลา", element: "EARTH", color: "#aaffaa" },
-  5: { class: "THE EXPLORER", title: "นักท่องโลกา", element: "AIR", color: "#ffccff" },
-  6: { class: "THE PALADIN", title: "อัศวินศักดิ์สิทธิ์", element: "EARTH", color: "#ccffcc" },
-  7: { class: "THE SAGE", title: "ปราชญ์เร้นลับ", element: "WATER", color: "#cc44ff" },
-  8: { class: "THE COMMANDER", title: "จอมทัพ", element: "FIRE", color: "#ffcc44" },
-  9: { class: "THE MYSTIC", title: "นักเวทมนตรา", element: "WATER", color: "#ff8844" },
-  11:{ class: "THE LUMINARY", title: "ผู้นำแสงสว่าง (Master Number)", element: "AIR", color: "#ffffff" },
-  22:{ class: "THE GRANDMASTER", title: "ปรมาจารย์แห่งผู้สร้าง (Master Number)", element: "EARTH", color: "#aaaaaa" },
-  33:{ class: "THE ASCENDED", title: "ผู้ตื่นรู้ (Master Number)", element: "FIRE", color: "#ffd700" }
+  1: { class: "THE LEADER", title: "ผู้นำ", element: "FIRE", color: "#ff8888", desc: "ความเป็นตัวของตัวเองสูง, มุ่งมั่น, รักอิสระ, เรียนรู้ที่จะพึ่งพาตนเอง" },
+  2: { class: "THE MEDIATOR", title: "ผู้ประสานงาน", element: "WATER", color: "#88ddff", desc: "ใจดี, อ่อนโยน, มีความเห็นอกเห็นใจ, รักสันติ, สร้างความร่วมมือ" },
+  3: { class: "THE CREATIVE", title: "ผู้สร้างสรรค์", element: "AIR", color: "#ffff88", desc: "มีเสน่ห์, อารมณ์ดี, สร้างสรรค์สูง, แสดงออกถึงความสุขผ่านศิลปะหรือคำพูด" },
+  4: { class: "THE BUILDER", title: "ผู้สร้างรากฐาน", element: "EARTH", color: "#aaffaa", desc: "จริงจัง, มีวินัย, เป็นระบบ, สร้างความมั่นคงและความปลอดภัย" },
+  5: { class: "THE ADVENTURER", title: "ผู้รักอิสระ", element: "AIR", color: "#ffccff", desc: "รักการผจญภัย, ปรับตัวเก่ง, กล้าเปลี่ยนแปลง, เรียนรู้ผ่านประสบการณ์ใหม่ๆ" },
+  6: { class: "THE NURTURER", title: "ผู้ดูแล", element: "EARTH", color: "#ccffcc", desc: "รับผิดชอบ, รักครอบครัว, โอบอ้อมอารี, บริการและเยียวยาผู้อื่น" },
+  7: { class: "THE SEEKER", title: "นักแสวงหาความจริง", element: "WATER", color: "#cc44ff", desc: "ฉลาด, รักการวิเคราะห์, สัญชาตญาณสูง, ค้นหาความจริงเบื้องหลังชีวิต" },
+  8: { class: "THE POWERHOUSE", title: "ผู้บริหารจัดการ", element: "FIRE", color: "#ffcc44", desc: "ทะเยอทะยาน, บริหารจัดการดีเยี่ยม, สร้างความสำเร็จในทางโลก" },
+  9: { class: "THE HUMANITARIAN", title: "มนุษยธรรม", element: "WATER", color: "#ff8844", desc: "เมตตา, รักโลก, ใจกว้าง, อุทิศตนเพื่อประโยชน์ส่วนรวม" },
+  11:{ class: "THE INTUITIVE", title: "ผู้นำทางจิตวิญญาณ (Master Number)", element: "AIR", color: "#ffffff", desc: "สัญชาตญาณแรงกล้า, ผู้นำทางจิตวิญญาณ, นักสร้างแรงบันดาลใจ" },
+  22:{ class: "THE MASTER BUILDER", title: "ปรมาจารย์แห่งการสร้าง (Master Number)", element: "EARTH", color: "#aaaaaa", desc: "เปลี่ยนความฝันให้เป็นจริงในเชิงรูปธรรม, ศักยภาพสร้างโปรเจกต์ขนาดใหญ่" },
+  33:{ class: "THE MASTER TEACHER", title: "ปรมาจารย์ผู้สอน (Master Number)", element: "FIRE", color: "#ffd700", desc: "พลังแห่งความรักและการสอน, เยียวยาจิตวิญญาณด้วยความเมตตาสูงสุด" }
 };
 
 function getLifePath(dobString){
@@ -405,22 +405,22 @@ async function main(){
   // Pre-fill UI immediately
   document.getElementById('lifePathText').textContent = lifePathNum;
 
-  const aiPrompt = `คุณคือนักจิตวิทยาและผู้เชี่ยวชาญด้าน Numerology (รหัสชีวิต)
+  const aiPrompt = `คุณคือนักจิตวิทยาและผู้เชี่ยวชาญด้าน Numerology (เลขศาสตร์)
 ผู้ใช้คนนี้มี Life Path Number: ${lifePathNum}
-ชื่อคลาสต้นแบบ: ${nData.class} (${nData.title})
-ธาตุหลัก: ${nData.element}
+คลาสของพวกเขาคือ: ${nData.class} (${nData.title})
+คีย์เวิร์ดของชีวิต: ${nData.desc}
 
-จงวิเคราะห์จิตวิญญาณและเส้นทางชีวิตของผู้ใช้อย่างลึกซึ้ง จริงใจ และนำไปใช้พัฒนาชีวิตได้จริง (Practical & Sincere)
-โดยให้ "ห่อหุ้ม" ด้วยธีมคำศัพท์สไตล์เกม RPG แฟนตาซี (เช่น เปรียบเปรยอุปสรรคเป็นมอนสเตอร์ หรือจุดแข็งเป็นพลังเวทมนตร์/สกิล) 
-ห้ามเขียนทีเล่นทีจริง ให้ความรู้สึกเหมือนกำลังอ่านคำทำนายจาก Oracle หรือผู้ชี้แนะทางจิตวิญญาณที่ทรงพลัง
+จงวิเคราะห์ตัวตน จุดมุ่งหมาย และแนวโน้มประสบการณ์ชีวิตของผู้ใช้อย่างลึกซึ้งและแม่นยำตามหลัก Life Path Number
+โดยให้ "ห่อหุ้ม" ด้วยคำศัพท์สไตล์เกม RPG แฟนตาซี (เช่น เรียกจุดแข็งว่าสกิล, ความท้าทายเปรียบเหมือนเควสต์)
+ห้ามเขียนทีเล่นทีจริง ให้ความรู้สึกเหมือนเป็นคำทำนายจาก Oracle ที่ทรงพลังและช่วยชี้แนะชีวิตได้จริง
 
 ตอบเป็น JSON เท่านั้น (ไม่ต้องมี markdown code block) โดยใช้รูปแบบนี้:
 {
-  "class": "ชื่อคลาสตัวละคร RPG ที่สะท้อนตัวตนของ Life Path นี้ (ภาษาอังกฤษ 1-2 คำ ใหญ่ทั้งหมด เช่น THE VANGUARD)",
-  "personality": "คำอธิบายบุคลิกภาพและการเดินทางของจิตวิญญาณ 3-4 ประโยค เป็นภาษาไทย อ่านแล้วซึ้ง ทรงพลัง และจริงใจ",
-  "strengths": ["จุดแข็งที่นำไปใช้ต่อยอดในชีวิตจริงได้ 1 (ตั้งชื่อทักษะแบบสกิล RPG)", "จุดแข็ง 2", "จุดแข็ง 3"],
-  "weaknesses": ["บาดแผลหรือความท้าทายในใจที่ต้องก้าวผ่าน 1 (ตั้งชื่อเป็นเควสต์/คำสาป)", "ความท้าทาย 2"],
-  "special_ability": "พรสวรรค์ที่ซ่อนอยู่และวิธีดึงมาใช้ 1 ประโยค (ภาษาไทย สไตล์ RPG)",
+  "class": "${nData.class}",
+  "personality": "อธิบายบุคลิกภาพและเป้าหมายชีวิตตามคีย์เวิร์ด 3-4 ประโยค เป็นภาษาไทย ทรงพลังและจริงใจ",
+  "strengths": ["จุดแข็งที่นำไปใช้ต่อยอดในชีวิตจริงได้ 1 (ตั้งชื่อทักษะสไตล์ RPG)", "จุดแข็ง 2", "จุดแข็ง 3"],
+  "weaknesses": ["ความท้าทายในชีวิตที่ต้องก้าวผ่าน 1 (ตั้งชื่อสไตล์ RPG)", "ความท้าทาย 2"],
+  "special_ability": "พรสวรรค์ที่ซ่อนอยู่ 1 ประโยค (ภาษาไทย สไตล์ RPG)",
   "stats": {
     "charisma": <ตัวเลข 1-10>,
     "wisdom": <ตัวเลข 1-10>,
@@ -449,10 +449,10 @@ async function main(){
       // Fallback if AI didn't return valid JSON
       profile = {
         class: nData.class,
-        personality: data.answer || 'ดวงดาวเปิดเผยความลับของคุณ...',
-        strengths: ['มีเสน่ห์ดึงดูดใจ', 'ใจแข็งและมุ่งมั่น'],
-        weaknesses: ['ไม่ชอบถูกบังคับ'],
-        special_ability: 'พลังแห่งดวงดาวดั้งเดิม',
+        personality: data.answer || 'ตัวเลขแห่งโชคชะตากำลังเปิดเผยเส้นทางของคุณ...',
+        strengths: ['พลังใจเข้มแข็ง', 'สติปัญญาเฉียบแหลม'],
+        weaknesses: ['ความลังเลในบางช่วงเวลา'],
+        special_ability: 'พลังแห่งศาสตร์ตัวเลขดั้งเดิม',
         stats: {charisma:7, wisdom:7, intuition:7, resilience:7}
       };
     }
