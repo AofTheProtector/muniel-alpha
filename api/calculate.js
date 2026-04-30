@@ -116,20 +116,18 @@ module.exports = async (req, res) => {
     // Default to Bangkok if province not found
     const coords = PROVINCES[province] || PROVINCES["กรุงเทพมหานคร"];
     
-    // Parse DOB (YYYY-MM-DD)
-    const [year, month, day] = dob.split('-').map(Number);
-    const { h, m } = parseTime(tob);
-
-    // circular-natal-horoscope-js expects local time and coordinates.
-    // Thailand is UTC+7, but Origin class handles local time via coordinates if we pass it correctly.
-    // Wait, let's just pass UTC time to be safe? 
-    // The doc says: "The year, month, date, hour, and minute properties are expected to be in local time for the latitude and longitude provided."
+    // Create a Date object assuming the input is in Thai Time (UTC+7)
+    // We construct an ISO string like "1990-04-15T06:00:00+07:00"
+    const localIso = `${dob}T${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:00+07:00`;
+    const dateObj = new Date(localIso);
+    
+    // Pass the exact UTC time to Origin
     const origin = new Origin({
-      year: year,
-      month: month - 1, // 0-indexed month
-      date: day,
-      hour: h,
-      minute: m,
+      year: dateObj.getUTCFullYear(),
+      month: dateObj.getUTCMonth(), // 0-indexed
+      date: dateObj.getUTCDate(),
+      hour: dateObj.getUTCHours(),
+      minute: dateObj.getUTCMinutes(),
       latitude: coords.lat,
       longitude: coords.lng
     });
