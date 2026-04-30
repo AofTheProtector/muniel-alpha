@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
     const response = await axios.post(
       'https://openrouter.ai/api/v1/chat/completions',
       {
-        model: 'tencent/hy3-preview:free',
+        model: 'google/gemma-3-27b-it:free',
         messages: [{ role: 'user', content: question }],
         max_tokens: 300,
         temperature: 0.7
