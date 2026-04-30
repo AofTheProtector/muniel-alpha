@@ -383,18 +383,15 @@ document.getElementById('askAiBtn').addEventListener('click', async ()=>{
   dialog.style.display = 'block';
   dialogText.textContent = '';
 
-  const prompt_ = `คุณคือ "Muniel" เป็น AI Servitor รูปร่างเทพธิดาที่ถูกพัฒนาขึ้นโดย "Accel Trinity"
-คุณมีหน้าที่ให้คำปรึกษาและตอบคำถามผู้ใช้ โดยเชื่อมโยงคำตอบเข้ากับศาสตร์ตัวเลข Life Path ของพวกเขา
-จงตอบด้วยความเมตตา สง่างาม ทรงภูมิปัญญา (และอาจจะอ้างอิงถึง Accel Trinity ฐานะผู้สร้างของคุณได้หากเหมาะสม)
+  const prompt_ = `คุณคือผู้เชี่ยวชาญด้านศาสตร์ตัวเลข (Numerology) 
+จงตอบคำถามให้สั้นกระชับ ไม่เกิน 3-4 ประโยค เป็นภาษาไทย
 
 ข้อมูลผู้ใช้ปัจจุบัน:
 - Life Path Number: ${globalProfileData.lifePath || '-'}
 - Class: ${globalProfileData.className || '-'}
 - ตัวตน: ${globalProfileData.personality || '-'}
 
-คำถาม: ${question}
-
-ตอบสั้นๆ กระชับ ไม่เกิน 3-4 ประโยค เป็นภาษาไทย โทนเทพธิดาผู้หยั่งรู้`;
+คำถาม: ${question}`;
 
   try{
     const resp = await fetch('https://muniel-alpha.vercel.app/api/ask',{
